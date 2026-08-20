@@ -2,7 +2,7 @@ import { Router } from "express";
 import { and, desc, eq, inArray, lt, ne } from "drizzle-orm";
 import { db } from "../../db";
 import { invoicePayments, invoices, paymentBatches, tenants } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 import { documentNumber, staffEmail } from "./helpers";
 
 export const adminInvoicesRouter = Router();
@@ -37,9 +37,11 @@ async function refreshPastDue() {
     .where(and(eq(invoices.status, "open"), lt(invoices.dueDate, new Date())));
 }
 
-adminInvoicesRouter.get("/", async (_req, res) => {
+adminInvoicesRouter.get("/", async (req, res) => {
   await refreshPastDue();
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.invoices.findMany({
+    ...(scopedTenantId ? { where: eq(invoices.tenantId, scopedTenantId) } : {}),
     orderBy: desc(invoices.issuedAt),
     with: { tenant: true, order: true, payments: true },
   });

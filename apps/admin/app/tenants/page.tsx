@@ -43,7 +43,7 @@ export default function TenantsPage() {
   return (
     <Shell>
       <h1 className="mb-1 text-2xl font-bold text-slate-900">Client Sites</h1>
-      <p className="mb-6 text-slate-500">Every branded storefront running on Signet — the Signet "Customer Sites" workspace.</p>
+      <p className="mb-6 text-slate-500">Every branded storefront available to this dashboard.</p>
 
       <div className="mb-8 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-sm">
@@ -73,12 +73,12 @@ export default function TenantsPage() {
                 <td className="px-4 py-2">{t.requireApproval ? "Required" : "—"}</td>
                 <td className="px-4 py-2 text-right">
                   <a
-                    href={`http://localhost:3000/store/${t.slug}`}
+                    href={`http://161.35.109.204/signature/${t.slug}`}
                     target="_blank"
                     rel="noreferrer"
                     className="mr-4 text-orange-600 hover:underline"
                   >
-                    localhost:3000/store/{t.slug} ↗
+                    161.35.109.204/signature/{t.slug} ↗
                   </a>
                   <Link href={`/tenants/${t.slug}`} className="text-indigo-600 hover:underline">
                     Manage

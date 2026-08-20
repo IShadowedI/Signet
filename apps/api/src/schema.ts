@@ -31,6 +31,8 @@ export const tenants = pgTable("tenants", {
   id: id(),
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
+  /** Satellite sites belong to one client dashboard; null is a top-level company. */
+  parentTenantId: text("parent_tenant_id").references((): any => tenants.id, { onDelete: "cascade" }),
   domain: text("domain").unique(),
   erpCustomerCode: text("erp_customer_code"),
   primaryColor: text("primary_color").notNull().default("#0f172a"),

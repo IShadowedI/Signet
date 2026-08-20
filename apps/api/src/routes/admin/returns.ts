@@ -2,7 +2,7 @@ import { Router } from "express";
 import { asc, desc, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { adhocRequests, returnActions, returnReasons, returnStages, returns } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 import { documentNumber, ensureReturnConfig, staffEmail } from "./helpers";
 
 export const adminReturnsRouter = Router();
@@ -73,8 +73,10 @@ adminReturnsRouter.delete("/config/stages/:id", async (req, res) => {
 
 // ---- Returns ----
 
-adminReturnsRouter.get("/", async (_req, res) => {
+adminReturnsRouter.get("/", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.returns.findMany({
+    ...(scopedTenantId ? { where: eq(returns.tenantId, scopedTenantId) } : {}),
     orderBy: desc(returns.createdAt),
     with: { tenant: true, user: true, order: true, lines: true },
   });
@@ -107,8 +109,10 @@ adminReturnsRouter.patch("/:id", async (req, res) => {
 
 // ---- Ad-hoc requests (Signet's customer request tracking) ----
 
-adminReturnsRouter.get("/adhoc/all", async (_req, res) => {
+adminReturnsRouter.get("/adhoc/all", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.adhocRequests.findMany({
+    ...(scopedTenantId ? { where: eq(adhocRequests.tenantId, scopedTenantId) } : {}),
     orderBy: desc(adhocRequests.createdAt),
     with: { tenant: true, user: true },
   });

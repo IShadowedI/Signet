@@ -97,7 +97,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="relative">
         <button onClick={toggleAlerts} className="skeuo-button relative grid h-14 w-14 place-items-center rounded-full text-xl" aria-label="Notifications" aria-expanded={alertsOpen}>
           🔔
-          <span className="absolute right-1 top-0 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[10px] font-bold text-white">{activity.length || 3}</span>
+          {activity.length > 0 ? <span className="absolute right-1 top-0 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[10px] font-bold text-white">{activity.length}</span> : null}
         </button>
         {alertsOpen ? (
           <div className="skeuo-panel absolute right-0 top-[calc(100%+0.75rem)] w-80 rounded-2xl p-3 text-sm">

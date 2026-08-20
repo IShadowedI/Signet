@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, isNull, or } from "drizzle-orm";
 import { db } from "../../db";
 import { sitePages, siteTemplates, tenants } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 import { staffEmail } from "./helpers";
 
 export const adminSitesRouter = Router();
@@ -13,8 +13,12 @@ adminSitesRouter.use(requireInternalAuth());
  * which template it was built from, so several people can work across sites
  * without stepping on each other.
  */
-adminSitesRouter.get("/", async (_req, res) => {
-  const rows = await db.query.tenants.findMany({ orderBy: asc(tenants.name) });
+adminSitesRouter.get("/", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
+  const rows = await db.query.tenants.findMany({
+    where: scopedTenantId ? or(eq(tenants.id, scopedTenantId), eq(tenants.parentTenantId, scopedTenantId)) : isNull(tenants.parentTenantId),
+    orderBy: asc(tenants.name),
+  });
   const pages = await db.query.sitePages.findMany({ with: { template: true } });
 
   res.json(
@@ -42,6 +46,8 @@ adminSitesRouter.get("/", async (_req, res) => {
 adminSitesRouter.get("/:slug/pages", async (req, res) => {
   const tenant = await db.query.tenants.findFirst({ where: eq(tenants.slug, req.params.slug) });
   if (!tenant) return res.status(404).json({ error: "Tenant not found" });
+  const scopedTenantId = internalTenantId(req);
+  if (scopedTenantId && tenant.id !== scopedTenantId && tenant.parentTenantId !== scopedTenantId) return res.status(403).json({ error: "Forbidden" });
   const rows = await db.query.sitePages.findMany({
     where: eq(sitePages.tenantId, tenant.id),
     orderBy: [asc(sitePages.sortOrder), asc(sitePages.path)],

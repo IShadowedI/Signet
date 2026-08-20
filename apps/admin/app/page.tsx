@@ -3,18 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { CompanyDashboard } from "@/components/CompanyDashboard";
 import { api, ApiError } from "@/lib/api";
 
-interface Me { role: string; tenant: { slug: string; name: string } | null; }
+interface Me { role: string; }
 interface Tenant { slug: string; name: string; orders: number; products: number; users: number; }
 interface Staff { id: string; username: string; name: string; role: string; tenant: { slug: string; name: string } | null; }
-interface Order { id: string; status: string; }
 
 export default function DashboardPage() {
   const [me, setMe] = useState<Me | null>(null);
   useEffect(() => { api<Me>("/api/auth/internal/me").then(setMe); }, []);
   if (!me) return <Shell><p className="text-[color:var(--muted)]">Loading dashboard...</p></Shell>;
-  return me.role === "owner" ? <OwnerDashboard /> : <CompanyDashboard me={me} />;
+  return me.role === "owner" ? <OwnerDashboard /> : <CompanyDashboard />;
 }
 
 function OwnerDashboard() {
@@ -37,17 +37,6 @@ function OwnerDashboard() {
       <section className="skeuo-panel rounded-3xl p-5"><h2 className="mb-3 font-bold">Create company account</h2><form onSubmit={create} className="grid gap-3"><input className="rounded border border-slate-300 px-3 py-2 text-sm" placeholder="Display name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /><input className="rounded border border-slate-300 px-3 py-2 text-sm" placeholder="Username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} required /><input className="rounded border border-slate-300 px-3 py-2 text-sm" placeholder="Temporary password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /><select className="rounded border border-slate-300 px-3 py-2 text-sm" value={form.tenantSlug} onChange={(e) => setForm({ ...form, tenantSlug: e.target.value })} required><option value="">Choose company</option>{tenants.map((tenant) => <option key={tenant.slug} value={tenant.slug}>{tenant.name}</option>)}</select><select className="rounded border border-slate-300 px-3 py-2 text-sm" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}><option value="admin">Company admin</option><option value="employee">Employee</option></select><button className="skeuo-orange rounded-xl px-4 py-2 text-sm font-bold">Create account</button>{error ? <p className="text-sm text-red-600">{error}</p> : null}</form></section>
     </div>
     <section className="skeuo-panel mt-6 rounded-3xl p-5"><h2 className="mb-3 font-bold">Account registry</h2><div className="grid gap-2 md:grid-cols-2">{staff.map((user) => <div key={user.id} className="skeuo-button rounded-2xl px-4 py-3"><b>{user.name}</b><div className="text-xs text-[color:var(--muted)]">{user.username} · {user.tenant?.name ?? "Signet"} · {user.role}</div></div>)}</div></section>
-  </Shell>;
-}
-
-function CompanyDashboard({ me }: { me: Me }) {
-  const [orders, setOrders] = useState<Order[]>([]);
-  useEffect(() => { api<Order[]>("/api/admin/orders").then(setOrders); }, []);
-  const company = me.tenant?.name ?? "Company";
-  return <Shell>
-    <div className="mb-7"><h1 className="text-4xl font-bold text-[color:var(--ink)]">{company} Dashboard</h1><p className="text-[color:var(--muted)]">Your company workspace for orders, products, quotes, and site operations.</p></div>
-    <div className="mb-6 grid grid-cols-3 gap-4"><Metric label="Company orders" value={orders.length} /><Metric label="Active workspace" value="1" /><Metric label="Account role" value={me.role} /></div>
-    <section className="skeuo-panel rounded-3xl p-5"><div className="mb-3 flex items-center justify-between"><h2 className="font-bold">Recent company orders</h2><Link href="/orders" className="text-orange-600 hover:underline">View orders</Link></div><div className="space-y-2">{orders.slice(0, 8).map((order) => <div key={order.id} className="skeuo-button rounded-2xl px-4 py-3"><b>Order {order.id.slice(0, 8)}</b><span className="ml-3 text-xs text-[color:var(--muted)]">{order.status}</span></div>)}{orders.length === 0 ? <p className="text-sm text-[color:var(--muted)]">No orders yet.</p> : null}</div></section>
   </Shell>;
 }
 

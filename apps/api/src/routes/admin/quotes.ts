@@ -2,7 +2,7 @@ import { Router } from "express";
 import { asc, desc, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { orderLines, orders, quoteComments, quoteLines, quotes, tenants } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 import { documentNumber, staffEmail } from "./helpers";
 
 export const adminQuotesRouter = Router();
@@ -42,8 +42,10 @@ function isExpired(q: { expiresAt: Date | null; status: string }): boolean {
   return Boolean(q.expiresAt && q.expiresAt < new Date() && OPEN_STATUSES.includes(q.status as QuoteStatus));
 }
 
-adminQuotesRouter.get("/", async (_req, res) => {
+adminQuotesRouter.get("/", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.quotes.findMany({
+    ...(scopedTenantId ? { where: eq(quotes.tenantId, scopedTenantId) } : {}),
     orderBy: desc(quotes.updatedAt),
     with: {
       tenant: true,

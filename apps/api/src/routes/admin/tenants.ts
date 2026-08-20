@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asc, eq, or } from "drizzle-orm";
+import { asc, eq, isNull, or } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { db } from "../../db";
 import { tenants } from "../../schema";
@@ -12,7 +12,7 @@ adminTenantsRouter.use(requireInternalAuth());
 adminTenantsRouter.get("/", async (req, res) => {
   const scopedTenantId = internalTenantId(req);
   const rows = await db.query.tenants.findMany({
-    ...(scopedTenantId ? { where: eq(tenants.id, scopedTenantId) } : {}),
+    where: scopedTenantId ? or(eq(tenants.id, scopedTenantId), eq(tenants.parentTenantId, scopedTenantId)) : isNull(tenants.parentTenantId),
     orderBy: asc(tenants.name),
     with: { catalog: true, users: true, orders: true },
   });
@@ -40,7 +40,7 @@ adminTenantsRouter.get("/:slug", async (req, res) => {
   });
   if (!tenant) return res.status(404).json({ error: "Tenant not found" });
   const scopedTenantId = internalTenantId(req);
-  if (scopedTenantId && tenant.id !== scopedTenantId) return res.status(403).json({ error: "Forbidden" });
+  if (scopedTenantId && tenant.id !== scopedTenantId && tenant.parentTenantId !== scopedTenantId) return res.status(403).json({ error: "Forbidden" });
   res.json(tenant);
 });
 
@@ -48,10 +48,11 @@ adminTenantsRouter.get("/:slug", async (req, res) => {
 adminTenantsRouter.post("/", async (req, res) => {
   const { slug, name, domain, erpCustomerCode } = req.body ?? {};
   if (!slug || !name) return res.status(400).json({ error: "slug and name are required" });
+  const scopedTenantId = internalTenantId(req);
 
   const [tenant] = await db
     .insert(tenants)
-    .values({ slug, name, domain: domain || null, erpCustomerCode: erpCustomerCode || null })
+    .values({ slug, name, domain: domain || null, erpCustomerCode: erpCustomerCode || null, parentTenantId: scopedTenantId })
     .returning();
   res.status(201).json(tenant);
 });

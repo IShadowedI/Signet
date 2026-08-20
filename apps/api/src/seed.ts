@@ -61,40 +61,6 @@ async function main() {
 
   const allProducts = await db.select().from(products);
 
-  const [ford] = await db
-    .insert(tenants)
-    .values({
-      slug: "ford",
-      name: "Ford Motor Company",
-      domain: "ford.localhost",
-      erpCustomerCode: "FORD",
-      primaryColor: "#00274d",
-      accentColor: "#1f6feb",
-      heroHeadline: "Ford Team Store",
-      heroSubtext: "Official apparel for Ford employees",
-      logoUrl: "https://picsum.photos/seed/fordlogo/160/48",
-      punchoutEnabled: true,
-      punchoutSharedSecret: randomBytes(24).toString("hex"),
-    })
-    .onConflictDoUpdate({ target: tenants.slug, set: { name: "Ford Motor Company" } })
-    .returning();
-
-  const [acme] = await db
-    .insert(tenants)
-    .values({
-      slug: "acme",
-      name: "Acme Industrial",
-      domain: "acme.localhost",
-      erpCustomerCode: "ACME",
-      primaryColor: "#7c2d12",
-      accentColor: "#ea580c",
-      heroHeadline: "Acme Uniform Program",
-      heroSubtext: "Workwear and safety apparel",
-      logoUrl: "https://picsum.photos/seed/acmelogo/160/48",
-    })
-    .onConflictDoUpdate({ target: tenants.slug, set: { name: "Acme Industrial" } })
-    .returning();
-
   const [signature] = await db
     .insert(tenants)
     .values({
@@ -107,6 +73,42 @@ async function main() {
       heroSubtext: "Branded apparel and uniform programs",
     })
     .onConflictDoUpdate({ target: tenants.slug, set: { name: "Signature Imagewear" } })
+    .returning();
+
+  const [ford] = await db
+    .insert(tenants)
+    .values({
+      slug: "ford",
+      name: "Ford Motor Company",
+      parentTenantId: signature.id,
+      domain: "ford.localhost",
+      erpCustomerCode: "FORD",
+      primaryColor: "#00274d",
+      accentColor: "#1f6feb",
+      heroHeadline: "Ford Team Store",
+      heroSubtext: "Official apparel for Ford employees",
+      logoUrl: "https://picsum.photos/seed/fordlogo/160/48",
+      punchoutEnabled: true,
+      punchoutSharedSecret: randomBytes(24).toString("hex"),
+    })
+    .onConflictDoUpdate({ target: tenants.slug, set: { name: "Ford Motor Company", parentTenantId: signature.id } })
+    .returning();
+
+  const [acme] = await db
+    .insert(tenants)
+    .values({
+      slug: "acme",
+      name: "Acme Industrial",
+      parentTenantId: signature.id,
+      domain: "acme.localhost",
+      erpCustomerCode: "ACME",
+      primaryColor: "#7c2d12",
+      accentColor: "#ea580c",
+      heroHeadline: "Acme Uniform Program",
+      heroSubtext: "Workwear and safety apparel",
+      logoUrl: "https://picsum.photos/seed/acmelogo/160/48",
+    })
+    .onConflictDoUpdate({ target: tenants.slug, set: { name: "Acme Industrial", parentTenantId: signature.id } })
     .returning();
 
   // Ford carries the full catalog; the polo is contract-priced lower.
