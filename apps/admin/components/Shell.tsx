@@ -17,8 +17,8 @@ interface Activity {
   id: string;
   status: string;
   createdAt: string;
-  tenant: string;
-  user: string;
+  tenant?: { name: string };
+  user?: { name: string } | null;
 }
 
 const NAV_ITEMS = [
@@ -68,13 +68,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
   async function toggleAlerts() {
     const next = !alertsOpen;
     setAlertsOpen(next);
-    if (next && me?.role === "owner") {
-      try { setActivity(await api<Activity[]>("/api/admin/staff/activity")); } catch { setActivity([]); }
+    if (next) {
+      try { setActivity(await api<Activity[]>("/api/admin/orders")); } catch { setActivity([]); }
     }
   }
 
   if (!checked) return <div className="p-8 text-slate-500">Loading…</div>;
   if (!me) return null;
+  const visibleNav = me.role === "owner"
+    ? NAV_ITEMS.filter((item) => ["Dashboard", "Client Sites"].includes(item.label))
+    : me.tenant?.slug === "signature-imagewear"
+      ? NAV_ITEMS
+      : NAV_ITEMS.filter((item) => !["Site Builder", "Ongoing Sites", "Template Gallery"].includes(item.label));
 
   return (
     <div className="min-h-screen text-[color:var(--ink)]">
@@ -99,8 +104,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <div className="mb-2 border-b border-[color:var(--line)] px-2 pb-2 text-xs font-semibold text-[color:var(--muted)]">Recent activity</div>
             {activity.length > 0 ? activity.map((item) => (
               <div key={item.id} className="border-b border-[color:var(--line)] px-2 py-2 last:border-0">
-                <div className="font-medium">{item.tenant}: order {item.status}</div>
-                <div className="text-xs text-[color:var(--muted)]">{item.user} · {new Date(item.createdAt).toLocaleString()}</div>
+                <div className="font-medium">{item.tenant?.name ?? "Company"}: order {item.status}</div>
+                <div className="text-xs text-[color:var(--muted)]">{item.user?.name ?? "Guest"} · {new Date(item.createdAt).toLocaleString()}</div>
               </div>
             )) : <p className="px-2 py-3 text-xs text-[color:var(--muted)]">No recent orders.</p>}
           </div>
@@ -142,7 +147,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <aside className="skeuo-panel fixed bottom-7 left-6 top-24 z-10 flex w-64 flex-col rounded-[28px] p-3">
         <nav className="flex min-h-0 flex-1 flex-col justify-between">
           <div className="space-y-0.5">
-            {NAV_ITEMS.map((item) => {
+            {visibleNav.map((item) => {
               const selected = pathname === item.href;
               return (
                 <div key={item.label}>
