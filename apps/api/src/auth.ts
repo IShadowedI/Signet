@@ -85,6 +85,11 @@ export function requireInternalAuth(...roles: string[]) {
   };
 }
 
+/** Owners span every client; company staff are limited to their assigned tenant. */
+export function internalTenantId(req: Request): string | null {
+  return req.internalUser?.role === "owner" ? null : req.internalUser?.tenantId ?? null;
+}
+
 /** Requires a valid buyer session scoped to the :slug tenant in the route. */
 export function requireBuyerAuth(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.[BUYER_COOKIE];

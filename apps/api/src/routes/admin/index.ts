@@ -12,6 +12,7 @@ import { adminReturnsRouter } from "./returns";
 import { adminShipmentsRouter } from "./shipments";
 import { adminSitesRouter } from "./sites";
 import { adminTemplatesRouter } from "./templates";
+import { adminStaffRouter } from "./staff";
 
 export const adminRouter = Router();
 
@@ -28,3 +29,4 @@ adminRouter.use("/returns", adminReturnsRouter);
 adminRouter.use("/shipments", adminShipmentsRouter);
 adminRouter.use("/sites", adminSitesRouter);
 adminRouter.use("/templates", adminTemplatesRouter);
+adminRouter.use("/staff", adminStaffRouter);

@@ -3,14 +3,16 @@ import { asc, eq, or } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { db } from "../../db";
 import { tenants } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 
 export const adminTenantsRouter = Router();
 adminTenantsRouter.use(requireInternalAuth());
 
 /** Lists all client storefronts — the "Customer Sites" workspace from Signet. */
-adminTenantsRouter.get("/", async (_req, res) => {
+adminTenantsRouter.get("/", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.tenants.findMany({
+    ...(scopedTenantId ? { where: eq(tenants.id, scopedTenantId) } : {}),
     orderBy: asc(tenants.name),
     with: { catalog: true, users: true, orders: true },
   });
@@ -37,6 +39,8 @@ adminTenantsRouter.get("/:slug", async (req, res) => {
     where: or(eq(tenants.slug, req.params.slug), eq(tenants.domain, req.params.slug)),
   });
   if (!tenant) return res.status(404).json({ error: "Tenant not found" });
+  const scopedTenantId = internalTenantId(req);
+  if (scopedTenantId && tenant.id !== scopedTenantId) return res.status(403).json({ error: "Forbidden" });
   res.json(tenant);
 });
 

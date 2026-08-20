@@ -13,6 +13,14 @@ interface Me {
   tenant: { name: string } | null;
 }
 
+interface Activity {
+  id: string;
+  status: string;
+  createdAt: string;
+  tenant: string;
+  user: string;
+}
+
 const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: "home.png" },
   { href: "/tenants", label: "Client Sites", icon: "client-sites.png" },
@@ -34,6 +42,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const [me, setMe] = useState<Me | null>(null);
   const [checked, setChecked] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [alertsOpen, setAlertsOpen] = useState(false);
+  const [activity, setActivity] = useState<Activity[]>([]);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -55,6 +65,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
     document.documentElement.dataset.theme = enabled ? "dark" : "light";
   }
 
+  async function toggleAlerts() {
+    const next = !alertsOpen;
+    setAlertsOpen(next);
+    if (next && me?.role === "owner") {
+      try { setActivity(await api<Activity[]>("/api/admin/staff/activity")); } catch { setActivity([]); }
+    }
+  }
+
   if (!checked) return <div className="p-8 text-slate-500">Loading…</div>;
   if (!me) return null;
 
@@ -71,10 +89,23 @@ export function Shell({ children }: { children: React.ReactNode }) {
             placeholder="Search clients, orders, invoices..."
           />
         </div>
-        <button className="skeuo-button relative grid h-14 w-14 place-items-center rounded-full text-xl" aria-label="Notifications">
+        <div className="relative">
+        <button onClick={toggleAlerts} className="skeuo-button relative grid h-14 w-14 place-items-center rounded-full text-xl" aria-label="Notifications" aria-expanded={alertsOpen}>
           🔔
-          <span className="absolute right-1 top-0 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[10px] font-bold text-white">3</span>
+          <span className="absolute right-1 top-0 grid h-5 w-5 place-items-center rounded-full bg-orange-500 text-[10px] font-bold text-white">{activity.length || 3}</span>
         </button>
+        {alertsOpen ? (
+          <div className="skeuo-panel absolute right-0 top-[calc(100%+0.75rem)] w-80 rounded-2xl p-3 text-sm">
+            <div className="mb-2 border-b border-[color:var(--line)] px-2 pb-2 text-xs font-semibold text-[color:var(--muted)]">Recent activity</div>
+            {activity.length > 0 ? activity.map((item) => (
+              <div key={item.id} className="border-b border-[color:var(--line)] px-2 py-2 last:border-0">
+                <div className="font-medium">{item.tenant}: order {item.status}</div>
+                <div className="text-xs text-[color:var(--muted)]">{item.user} · {new Date(item.createdAt).toLocaleString()}</div>
+              </div>
+            )) : <p className="px-2 py-3 text-xs text-[color:var(--muted)]">No recent orders.</p>}
+          </div>
+        ) : null}
+        </div>
         <div className="relative">
           <button
             className="skeuo-button flex items-center gap-3 rounded-3xl px-3 py-2 text-left"

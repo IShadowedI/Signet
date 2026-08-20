@@ -2,15 +2,17 @@ import { Router } from "express";
 import { desc, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { orders } from "../../schema";
-import { requireInternalAuth } from "../../auth";
+import { internalTenantId, requireInternalAuth } from "../../auth";
 import { erp } from "../../erp";
 
 export const adminOrdersRouter = Router();
 adminOrdersRouter.use(requireInternalAuth());
 
 /** All orders across every tenant, most recent first. */
-adminOrdersRouter.get("/", async (_req, res) => {
+adminOrdersRouter.get("/", async (req, res) => {
+  const scopedTenantId = internalTenantId(req);
   const rows = await db.query.orders.findMany({
+    ...(scopedTenantId ? { where: eq(orders.tenantId, scopedTenantId) } : {}),
     orderBy: desc(orders.createdAt),
     with: { tenant: true, user: true, lines: true },
   });
