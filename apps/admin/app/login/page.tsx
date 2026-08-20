@@ -7,7 +7,7 @@ import { api, ApiError } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("owner");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -29,8 +29,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100">
       <form onSubmit={onSubmit} className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-1 text-xl font-bold text-slate-900">Signet Admin</h1>
-        <p className="mb-6 text-sm text-slate-500">Signet owner sign in.</p>
+        <h1 className="mb-6 text-xl font-bold text-slate-900">Signet Sign In</h1>
 
         <label className="mb-1 block text-sm font-medium text-slate-700">Username</label>
         <input
@@ -58,8 +57,8 @@ export default function LoginPage() {
         >
           {busy ? "Signing in…" : "Sign in"}
         </button>
-        <Link href="/staff/login" className="mt-4 block text-center text-sm text-indigo-600 hover:underline">
-          Company admin or employee sign in
+        <Link href="/owner/login" className="mt-4 block text-center text-sm text-indigo-600 hover:underline">
+          Signet Owner sign in
         </Link>
       </form>
     </div>
