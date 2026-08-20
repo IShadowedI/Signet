@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    .page-hero{background:var(--light-gray);padding:52px 24px;text-align:center}
+    .page-hero__title{font-family:var(--serif);font-size:2.4rem;font-weight:700;color:var(--black);margin-bottom:8px}
+    .page-hero__crumb{font-size:0.78rem;color:var(--text-2)}
+    .page-hero__crumb a{color:var(--text-2)}.page-hero__crumb a:hover{color:var(--accent)}
+
+    .account-wrap{max-width:500px;margin:0 auto;padding:56px 24px 80px}
+
+    /* Tab switcher */
+    .acc-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--light-gray);border-radius:8px;padding:4px;margin-bottom:28px}
+    .acc-tab{padding:11px;font-size:0.84rem;font-weight:700;text-align:center;cursor:pointer;border-radius:6px;transition:all .15s;border:none;background:transparent;font-family:var(--font);color:var(--text-2)}
+    .acc-tab.active{background:var(--white);color:var(--black);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+    /* Card */
+    .acc-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:32px}
+    .acc-form-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--black);margin-bottom:6px}
+    .acc-form-sub{font-size:0.83rem;color:var(--text-2);margin-bottom:24px}
+
+    /* Form elements */
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-2);margin-bottom:6px}
+    .form-control{width:100%;border:1px solid var(--border);border-radius:6px;padding:11px 14px;font-size:0.86rem;font-family:var(--font);color:var(--text);background:var(--white);transition:border-color .15s}
+    .form-control::placeholder{color:var(--mid-gray)}
+    .form-control:focus{outline:none;border-color:var(--accent)}
+    .input-wrap{position:relative}
+    .input-wrap .form-control{padding-right:44px}
+    .toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mid-gray);padding:4px;line-height:0}
+    .toggle-pw svg{width:18px;height:18px}
+
+    /* Checkbox */
+    .form-check{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:var(--text-2)}
+    .form-check input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+    .form-check a{color:var(--accent)}
+
+    /* Forgot */
+    .forgot-link{font-size:0.78rem;color:var(--text-2);text-decoration:none;float:right;margin-top:-12px;margin-bottom:16px;display:block;clear:both}
+    .forgot-link:hover{color:var(--accent)}
+
+    /* Submit */
+    .acc-btn{width:100%;padding:14px;background:var(--black);color:#fff;border:none;border-radius:6px;font-size:0.86rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:var(--font);transition:background .15s;margin-top:8px}
+    .acc-btn:hover{background:var(--accent)}
+
+    /* Divider */
+    .acc-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text-2);font-size:0.78rem}
+    .acc-divider::before,.acc-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+    /* Social */
+    .social-login-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .social-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:0.8rem;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--white);color:var(--text);transition:border-color .15s}
+    .social-btn:hover{border-color:var(--accent)}
+    .social-btn svg{width:18px;height:18px}
+
+    /* Password strength */
+    .pw-strength{margin-top:6px;display:flex;gap:4px}
+    .pw-bar{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .2s}
+    .pw-bar.weak{background:#e8474a}
+    .pw-bar.fair{background:var(--gold)}
+    .pw-bar.strong{background:var(--green)}
+    .pw-label{font-size:0.72rem;color:var(--mid-gray);margin-top:4px}
+
+    /* Panel toggle */
+    .acc-panel{display:none}.acc-panel.active{display:block}
+
+    @media(max-width:640px){
+      .form-row{grid-template-columns:1fr}
+      .acc-card{padding:22px 16px}
+      .account-wrap{padding:36px 16px 60px}
+      .social-login-btns{grid-template-columns:1fr}
+    }
+
+    body.dark-mode .acc-card{background:var(--white);border-color:var(--border)}
+    body.dark-mode .acc-tabs{background:var(--light-gray)}
+    body.dark-mode .acc-tab.active{background:var(--white)}
+    body.dark-mode .form-control{background:var(--white);border-color:var(--border);color:var(--text)}
+    body.dark-mode .social-btn{background:var(--white);border-color:var(--border)}
+    body.dark-mode .page-hero{background:var(--light-gray)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <div class="header-search"><input type="search" id="headerSearch" placeholder="Search styles, brands…" autocomplete="off" /><button id="searchSubmit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
+        <button class="hicon" aria-label="Account" onclick="location.href='account.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="hicon" aria-label="Wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span class="cart-badge" id="cartBadge">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar"><div class="trust-bar__inner">
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Gift Wrapping</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>Easy &amp; Free Returns</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Student Discount</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Secure Shopping</span>
+  </div></div>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <h1 class="page-hero__title">My Account</h1>
+    <p class="page-hero__crumb"><a href="clothing.html">Home</a> &rsaquo; Account</p>
+  </div>
+
+  <!-- ACCOUNT FORM -->
+  <div class="account-wrap">
+    <!-- Tab switcher -->
+    <div class="acc-tabs" role="tablist">
+      <button class="acc-tab active" id="tabSignIn" role="tab" aria-selected="true" aria-controls="panelSignIn">Sign In</button>
+      <button class="acc-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister">Create Account</button>
+    </div>
+
+    <!-- Sign In panel -->
+    <div class="acc-card">
+      <div class="acc-panel active" id="panelSignIn" role="tabpanel" aria-labelledby="tabSignIn">
+        <h2 class="acc-form-title">Welcome back</h2>
+        <p class="acc-form-sub">Sign in to access your orders, wishlist and more.</p>
+        <form id="signInForm" novalidate>
+          <div class="form-group">
+            <label for="siEmail">Email Address</label>
+            <input type="email" id="siEmail" class="form-control" placeholder="jane@example.com" autocomplete="email" required />
+          </div>
+          <div class="form-group">
+            <label for="siPassword">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="siPassword" class="form-control" placeholder="••••••••" autocomplete="current-password" required />
+              <button type="button" class="toggle-pw" aria-label="Show password" data-target="siPassword">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <a href="#" class="forgot-link">Forgot your password?</a>
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-check"><input type="checkbox" id="siRemember" /> Remember me</label>
+          </div>
+          <button type="submit" class="acc-btn">Sign In</button>
+        </form>
+        <div class="acc-divider">or continue with</div>
+        <div class="social-login-btns">
+          <button class="social-btn"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Google</button>
+          <button class="social-btn"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</button>
+        </div>
+      </div>
+
+      <!-- Register panel -->
+      <div class="acc-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
+        <h2 class="acc-form-title">Create your account</h2>
+        <p class="acc-form-sub">Join Clothing for exclusive offers and a faster checkout experience.</p>
+        <form id="registerForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regFirst">First Name</label>
+              <input type="text" id="regFirst" class="form-control" placeholder="Jane" autocomplete="given-name" required />
+            </div>
+            <div class="form-group">
+              <label for="regLast">Last Name</label>
+              <input type="text" id="regLast" class="form-control" placeholder="Smith" autocomplete="family-name" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email Address</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="jane@example.com" autocomplete="email" required />
+          </div>
+          <div class="form-group">
+            <label for="regPw">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="regPw" class="form-control" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8" />
+              <button type="button" class="toggle-pw" aria-label="Show password" data-target="regPw">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="pw-strength" id="pwStrength"><div class="pw-bar" id="pwBar1"></div><div class="pw-bar" id="pwBar2"></div><div class="pw-bar" id="pwBar3"></div></div>
+            <p class="pw-label" id="pwLabel"></p>
+          </div>
+          <div class="form-group">
+            <label for="regPwConfirm">Confirm Password</label>
+            <div class="input-wrap">
+              <input type="password" id="regPwConfirm" class="form-control" placeholder="Re-enter password" autocomplete="new-password" required />
+              <button type="button" class="toggle-pw" aria-label="Show password" data-target="regPwConfirm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-check"><input type="checkbox" id="regNews" /> Subscribe to our newsletter for style inspiration &amp; offers</label>
+          </div>
+          <div class="form-group">
+            <label class="form-check"><input type="checkbox" id="regTerms" required /> I agree to the <a href="terms.html">Terms &amp; Conditions</a> and <a href="privacy.html">Privacy Policy</a></label>
+          </div>
+          <button type="submit" class="acc-btn">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="footer-col footer-col--brand">
+        <div class="footer-logo">Clothing</div>
+        <p>123 Fashion Street<br>New York, NY 10001</p>
+        <p>hello@clothing.com<br>+1 (212) 555-0100</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop By</h4><ul><li><a href="shop.html?cat=women">Women</a></li><li><a href="shop.html?cat=men">Men</a></li><li><a href="shop.html?cat=new">New Arrivals</a></li><li><a href="shop.html?cat=sale">Sale</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="about.html">About Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+      <div class="footer-col"><h4>Customer Service</h4><ul><li><a href="faq.html">Help &amp; FAQs</a></li><li><a href="account.html">Track Your Order</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+      <div class="footer-col footer-col--newsletter">
+        <h4>Newsletter</h4>
+        <p>Subscribe for exclusive offers &amp; style updates.</p>
+        <form class="footer-form" id="footerForm"><input type="email" placeholder="Enter your email" required /><button type="submit">Submit</button></form>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>&copy; 2026 Clothing. All rights reserved.</p>
+      <div class="payment-icons"><span class="pay-icon">VISA</span><span class="pay-icon">MC</span><span class="pay-icon">AMEX</span><span class="pay-icon">PayPal</span><span class="pay-icon">Apple Pay</span></div>
+    </div>
+  </footer>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block">Checkout</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+  <script src="clothing.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    // Tab switching
+    var tabSI = document.getElementById('tabSignIn');
+    var tabReg = document.getElementById('tabRegister');
+    var panelSI = document.getElementById('panelSignIn');
+    var panelReg = document.getElementById('panelRegister');
+    function showTab(tab){
+      var isSI = tab==='signin';
+      tabSI.classList.toggle('active',isSI);
+      tabReg.classList.toggle('active',!isSI);
+      tabSI.setAttribute('aria-selected', isSI);
+      tabReg.setAttribute('aria-selected', !isSI);
+      panelSI.classList.toggle('active',isSI);
+      panelReg.classList.toggle('active',!isSI);
+    }
+    tabSI.addEventListener('click',function(){showTab('signin');});
+    tabReg.addEventListener('click',function(){showTab('register');});
+
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-pw').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var inp = document.getElementById(this.dataset.target);
+        if(!inp) return;
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+      });
+    });
+
+    // Password strength meter
+    var pwInput = document.getElementById('regPw');
+    var bars = [document.getElementById('pwBar1'), document.getElementById('pwBar2'), document.getElementById('pwBar3')];
+    var pwLabel = document.getElementById('pwLabel');
+    if(pwInput){
+      pwInput.addEventListener('input', function(){
+        var val = this.value;
+        var score = 0;
+        if(val.length >= 8) score++;
+        if(/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+        if(/[^A-Za-z0-9]/.test(val)) score++;
+        var labels = ['','Weak','Fair','Strong'];
+        var cls = ['','weak','fair','strong'];
+        bars.forEach(function(b,i){ b.className = 'pw-bar' + (i < score ? ' ' + cls[score] : ''); });
+        pwLabel.textContent = val.length ? labels[score] : '';
+      });
+    }
+
+    // Sign in form
+    document.getElementById('signInForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      if(typeof showToast === 'function') showToast('Signed in successfully!');
+    });
+
+    // Register form
+    document.getElementById('registerForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      var pw = document.getElementById('regPw').value;
+      var pwc = document.getElementById('regPwConfirm').value;
+      if(pw !== pwc){ if(typeof showToast === 'function') showToast('Passwords do not match.'); return; }
+      if(!document.getElementById('regTerms').checked){ if(typeof showToast === 'function') showToast('Please accept the Terms & Conditions.'); return; }
+      if(typeof showToast === 'function') showToast('Account created! Welcome to Clothing.');
+    });
+  })();
+  </script>
+</body>
+</html>

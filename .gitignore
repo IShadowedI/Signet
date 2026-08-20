@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.next/
+out/
+*.log
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# local dev database (PGlite embedded Postgres)
+apps/api/pgdata/
+
+# universal CSV ERP sync export
+apps/api/exports/
+
+# employee-uploaded site templates (built-ins live in packages/site-templates)
+apps/api/storage/
+
+# os
+.DS_Store
+Thumbs.db

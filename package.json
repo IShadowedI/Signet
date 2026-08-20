@@ -1,0 +1,22 @@
+{
+  "name": "signet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-tenant B2B apparel commerce platform (Signet replacement)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:api dev:storefront dev:admin",
+    "dev:api": "npm run dev --workspace @signet/api",
+    "dev:storefront": "npm run dev --workspace @signet/storefront",
+    "dev:admin": "npm run dev --workspace @signet/admin",
+    "db:setup": "npm run db:setup --workspace @signet/api",
+    "db:seed": "npm run db:seed --workspace @signet/api",
+    "build": "npm run build --workspace @signet/api && npm run build --workspace @signet/storefront && npm run build --workspace @signet/admin"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

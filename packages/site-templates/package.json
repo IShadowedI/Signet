@@ -1,0 +1,20 @@
+{
+  "name": "@signet/site-templates",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Built-in HTML site template library + loader for uploaded templates",
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^20.16.11",
+    "typescript": "^5.6.3"
+  }
+}

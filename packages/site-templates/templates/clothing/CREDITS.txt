@@ -1,0 +1,68 @@
+================================================================
+  CLOTHING — Credits & Third-Party Assets
+================================================================
+
+This template uses the following third-party resources.
+All items are used in accordance with their respective licences.
+
+----------------------------------------------------------------
+IMAGES
+----------------------------------------------------------------
+
+All images are sourced from Unsplash (https://unsplash.com).
+Unsplash images are free to use for commercial and non-commercial
+purposes under the Unsplash Licence:
+https://unsplash.com/license
+
+No attribution is required by the licence, however we credit
+the photographers below as a courtesy.
+
+Placeholder images are delivered via the Unsplash CDN at:
+https://images.unsplash.com/photo-{id}?w={width}&q=80
+
+NOTE FOR BUYERS:
+  Replace all Unsplash placeholder images with your own product
+  photography before publishing your live site. Commercial use of
+  Unsplash images for resale of physical goods may require
+  additional clearance.
+
+----------------------------------------------------------------
+FONTS
+----------------------------------------------------------------
+
+Montserrat
+  Designer: Julieta Ulanovsky
+  Licence:  SIL Open Font Licence 1.1
+  Source:   https://fonts.google.com/specimen/Montserrat
+
+Playfair Display
+  Designer: Claus Eggers Sørensen
+  Licence:  SIL Open Font Licence 1.1
+  Source:   https://fonts.google.com/specimen/Playfair+Display
+
+Both fonts are loaded via Google Fonts CDN. No additional
+licence action is required for web use.
+
+----------------------------------------------------------------
+ICONS
+----------------------------------------------------------------
+
+All SVG icons used in the header, footer, and product cards
+are original works created specifically for this template and
+are covered by the standard Envato Regular / Extended Licence.
+
+----------------------------------------------------------------
+JAVASCRIPT
+----------------------------------------------------------------
+
+No third-party JavaScript libraries or frameworks are used.
+All scripts in clothing.js are original vanilla ES2015+.
+
+----------------------------------------------------------------
+LICENCES SUMMARY
+----------------------------------------------------------------
+
+Unsplash Licence:  https://unsplash.com/license
+SIL OFL 1.1:       https://scripts.sil.org/OFL
+
+================================================================

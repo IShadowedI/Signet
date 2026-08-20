@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work — NEXUS Digital Agency</title>
+  <meta name="description" content="Browse NEXUS's portfolio of brand identity, web design, digital marketing, and UX projects for clients around the world." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="agency.css" />
+  <style>
+    .portfolio-full-item .portfolio-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.6s;
+      filter: brightness(0.72) saturate(0.75);
+    }
+    .portfolio-full-item:hover .portfolio-img {
+      transform: scale(1.05); filter: brightness(0.52) saturate(0.9);
+    }
+    .pf-overlay {
+      position: absolute; inset: 0;
+      padding: 28px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.05) 55%, transparent 100%);
+    }
+    .pf-cat {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent-light); margin-bottom: 6px;
+    }
+    .pf-overlay h3 { font-size: 1.15rem; color: #fff; margin-bottom: 4px; }
+    .pf-overlay span { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+    .pf-arrow {
+      position: absolute; top: 20px; right: 20px;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translate(4px,-4px);
+      transition: opacity 0.3s, transform 0.3s, background 0.2s;
+    }
+    .portfolio-full-item:hover .pf-arrow {
+      opacity: 1; transform: translate(0,0);
+      background: rgba(124,58,237,0.65);
+    }
+    .pf-arrow svg { width: 15px; height: 15px; color: #fff; }
+
+    /* Featured case study strip */
+    .featured-case {
+      background: var(--bg-2);
+      padding-block: var(--section-py);
+      border-top: 1px solid var(--border);
+    }
+    .case-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .case-img {
+      width: 100%; border-radius: 16px; object-fit: cover;
+      aspect-ratio: 4/3; filter: brightness(0.85) saturate(0.85);
+    }
+    .case-content .section-label { margin-bottom: 14px; }
+    .case-content h2 { margin-bottom: 18px; }
+    .case-content p  { margin-bottom: 16px; line-height: 1.82; }
+    .case-results {
+      display: flex; gap: 40px; margin: 32px 0;
+      padding: 28px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .case-result .result-num {
+      font-family: var(--serif); font-size: 1.9rem; font-weight: 800;
+      background: var(--grad-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1; margin-bottom: 4px;
+    }
+    .case-result .result-label { font-size: 0.78rem; color: var(--text-3); }
+
+    @media (max-width: 900px) {
+      .case-inner { grid-template-columns: 1fr; gap: 44px; }
+      .case-results { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-mark">N</span>NEXUS</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="portfolio.html" class="active">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Journal</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a href="contact.html" class="btn btn-primary">Start a Project</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Journal</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <a href="contact.html" class="btn btn-primary btn-lg">Start a Project</a>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <span>Work</span>
+      </div>
+      <div class="section-label">Selected projects</div>
+      <h1 style="max-width:14ch; margin-bottom:20px;">240 projects.<br>Every one matters.</h1>
+      <p class="lead" style="max-width:540px;">A selection of recent work spanning brand identity, web design, digital products, and campaigns. The full portfolio is available on request.</p>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO GRID -->
+  <section style="background: var(--bg); padding-block: var(--section-py);">
+    <div class="container">
+      <!-- Filter tabs -->
+      <div class="filter-tabs reveal">
+        <button class="filter-tab active" data-filter="all">All Work</button>
+        <button class="filter-tab" data-filter="brand">Brand Identity</button>
+        <button class="filter-tab" data-filter="web">Web &amp; Digital</button>
+        <button class="filter-tab" data-filter="ux">UI/UX</button>
+        <button class="filter-tab" data-filter="marketing">Marketing</button>
+        <button class="filter-tab" data-filter="motion">Motion</button>
+      </div>
+
+      <div class="portfolio-full-grid">
+
+        <a href="#" class="portfolio-full-item reveal" data-category="brand">
+          <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=700&q=80"
+               alt="Luminary Hotels" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Brand Identity</div>
+            <h3>Luminary Hotels</h3>
+            <span>Complete visual rebrand — 2025</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-1" data-category="web">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80"
+               alt="Velocity Sport" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">E-commerce</div>
+            <h3>Velocity Sport</h3>
+            <span>Performance e-commerce platform — 2025</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-2" data-category="ux">
+          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=700&q=80"
+               alt="Aurum Pay" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Mobile App / UX</div>
+            <h3>Aurum Pay</h3>
+            <span>Fintech app design — 4.9★ App Store</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal" data-category="marketing">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&q=80"
+               alt="Bloom Wellness" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Campaign / Marketing</div>
+            <h3>Bloom Wellness</h3>
+            <span>Digital launch campaign — 2024</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-1" data-category="ux">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=80"
+               alt="NexGen SaaS" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">SaaS / UI Design</div>
+            <h3>NexGen Dashboard</h3>
+            <span>B2B analytics platform redesign</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-2" data-category="brand">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80"
+               alt="Kova Restaurant" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Brand Identity</div>
+            <h3>Kova Restaurant Group</h3>
+            <span>Multi-location rebrand — 2024</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal" data-category="web">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80"
+               alt="Forma Architecture" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Web Design</div>
+            <h3>Forma Architecture</h3>
+            <span>Award-winning portfolio site — 2025</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-1" data-category="motion">
+          <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=700&q=80"
+               alt="Stellar Motion" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Motion &amp; Brand Film</div>
+            <h3>Stellar Collective</h3>
+            <span>Brand film + motion system — 2025</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+        <a href="#" class="portfolio-full-item reveal reveal-delay-2" data-category="web">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&q=80"
+               alt="Helix Tech" class="portfolio-img" style="background-color:#1a1a2e;" />
+          <div class="pf-overlay">
+            <div class="pf-cat">Web App / SaaS</div>
+            <h3>Helix Technologies</h3>
+            <span>Developer tools platform — 2024</span>
+          </div>
+          <div class="pf-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED CASE STUDY -->
+  <section class="featured-case">
+    <div class="container">
+      <div class="case-inner">
+        <div class="reveal-left">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80"
+               alt="Velocity Sport case study" class="case-img" style="background-color:#1a1a2e;" />
+        </div>
+        <div class="reveal-right">
+          <div class="section-label">Case study</div>
+          <h2>Velocity Sport: From rebrand to 67% conversion lift</h2>
+          <p>Velocity Sport came to us with a dated identity and a website that was haemorrhaging visitors. We rebuilt everything — brand, site architecture, and UX — from the ground up over 14 weeks.</p>
+          <p>The new platform launched with a headless commerce architecture, sub-1.5 second load times, and a checkout flow we'd validated through 6 rounds of user testing. The results exceeded every benchmark.</p>
+          <div class="case-results">
+            <div class="case-result">
+              <div class="result-num">+67%</div>
+              <div class="result-label">Conversion rate</div>
+            </div>
+            <div class="case-result">
+              <div class="result-num">2×</div>
+              <div class="result-label">Organic traffic</div>
+            </div>
+            <div class="case-result">
+              <div class="result-num">-38%</div>
+              <div class="result-label">Bounce rate</div>
+            </div>
+          </div>
+          <a href="contact.html" class="btn btn-primary">Start a Similar Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="section-label" style="justify-content:center;">Your project next?</div>
+      <h2 class="reveal">Let's make something<br><span class="text-gradient">worth putting in here.</span></h2>
+      <p class="reveal reveal-delay-1">Every project in this portfolio started with a single conversation. Yours can too.</p>
+      <div class="cta-btns reveal reveal-delay-2">
+        <a href="contact.html" class="btn btn-primary btn-lg">Start a Project</a>
+        <a href="services.html" class="btn btn-outline btn-lg">Explore Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo"><span class="logo-mark">N</span>NEXUS</a>
+          <p>Crafting digital experiences that move people. Strategy, design, and technology for brands that refuse to be ordinary.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Twitter/X">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://dribbble.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Dribbble">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services.html">Brand Identity</a></li>
+            <li><a href="services.html">Web Design &amp; Dev</a></li>
+            <li><a href="services.html">UI/UX Design</a></li>
+            <li><a href="services.html">Digital Marketing</a></li>
+            <li><a href="services.html">Motion &amp; Video</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="portfolio.html">Our Work</a></li>
+            <li><a href="blog.html">Journal</a></li>
+            <li><a href="contact.html">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:hello@nexusagency.co">hello@nexusagency.co</a></li>
+            <li><a href="tel:+12125551234">+1 (212) 555-1234</a></li>
+            <li><a href="contact.html">New York, NY</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 NEXUS Digital Agency. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="agency.js"></script>
+</body>
+</html>

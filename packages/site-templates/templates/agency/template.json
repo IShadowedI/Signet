@@ -1,0 +1,19 @@
+{
+  "slug": "agency",
+  "name": "Agency — Corporate & Services",
+  "description": "Corporate/services marketing template: landing page, services, portfolio, blog, about, and contact. A good starting point for distributor and manufacturer brochure sites.",
+  "category": "Corporate & Services",
+  "entry": "index.html",
+  "thumbnail": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+  "tags": ["corporate", "services", "marketing", "portfolio", "responsive"],
+  "pages": [
+    { "file": "index.html", "path": "/", "title": "Home", "isHome": true },
+    { "file": "services.html", "path": "/services", "title": "Services" },
+    { "file": "portfolio.html", "path": "/portfolio", "title": "Portfolio" },
+    { "file": "blog.html", "path": "/blog", "title": "Blog" },
+    { "file": "about.html", "path": "/about", "title": "About" },
+    { "file": "contact.html", "path": "/contact", "title": "Contact" }
+  ],
+  "stylesheets": ["agency.css"],
+  "scripts": ["agency.js"]
+}

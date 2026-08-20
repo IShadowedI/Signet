@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Essential Oversized Hoodie — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Product Detail page styles ── */
+    .breadcrumb{max-width:1400px;margin:0 auto;padding:18px 24px 0;font-size:0.78rem;color:var(--text-2)}
+    .breadcrumb a{color:var(--text-2)}
+    .breadcrumb a:hover{color:var(--accent)}
+
+    .product-layout{max-width:1400px;margin:0 auto;padding:28px 24px 72px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+
+    /* Gallery */
+    .product-gallery{}
+    .gallery-main{position:relative;border-radius:10px;overflow:hidden;background:var(--light-gray);aspect-ratio:3/4;margin-bottom:12px}
+    .gallery-main img{width:100%;height:100%;object-fit:cover}
+    .gallery-badge{position:absolute;top:16px;left:16px;background:var(--accent);color:#fff;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:3px}
+    .gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .gallery-thumb{border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;aspect-ratio:3/4;background:var(--light-gray);transition:border-color .15s}
+    .gallery-thumb.active,.gallery-thumb:hover{border-color:var(--accent)}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover}
+
+    /* Info */
+    .product-info{}
+    .pi-eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .pi-title{font-family:var(--serif);font-size:2rem;font-weight:700;line-height:1.25;color:var(--black);margin-bottom:14px}
+    .pi-rating{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .pi-stars{color:var(--gold);font-size:0.9rem;letter-spacing:2px}
+    .pi-reviews{font-size:0.8rem;color:var(--text-2)}
+    .pi-price{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    .pi-price .price-now{font-size:1.7rem;font-weight:800;color:var(--black)}
+    .pi-price .price-was{font-size:1rem;color:var(--mid-gray);text-decoration:line-through}
+    .pi-price .price-save{font-size:0.8rem;font-weight:700;color:var(--accent);background:#fef0f0;padding:3px 8px;border-radius:3px}
+    .pi-desc{font-size:0.88rem;color:var(--text-2);line-height:1.7;margin-bottom:24px}
+    .pi-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+    /* Colour swatches */
+    .pi-label{font-size:0.76rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text);margin-bottom:10px;display:flex;gap:8px;align-items:center}
+    .pi-label span{font-weight:400;text-transform:none;color:var(--text-2)}
+    .swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .swatch{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12)}
+    .swatch.active,.swatch:hover{border-color:var(--accent);transform:scale(1.12)}
+
+    /* Size */
+    .size-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .sz-btn{border:1px solid var(--border);border-radius:5px;padding:8px 14px;font-size:0.8rem;font-weight:600;font-family:var(--font);cursor:pointer;background:var(--white);color:var(--text-2);transition:all .15s}
+    .sz-btn:hover,.sz-btn.active{border-color:var(--accent);background:var(--accent);color:#fff}
+    .sz-btn.oos{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+    .size-guide-link{font-size:0.76rem;color:var(--accent);display:inline-flex;align-items:center;gap:4px;cursor:pointer;margin-bottom:24px}
+    .size-guide-link svg{width:13px;height:13px}
+
+    /* Qty + add */
+    .qty-add-row{display:flex;gap:12px;align-items:stretch;margin-bottom:16px}
+    .qty-selector{display:flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--white)}
+    .qty-btn{width:40px;height:50px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-2);transition:color .15s;font-family:var(--font)}
+    .qty-btn:hover{color:var(--accent)}
+    .qty-input{width:44px;height:50px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);text-align:center;font-size:0.95rem;font-weight:600;font-family:var(--font);background:var(--white);color:var(--text)}
+    .qty-input::-webkit-outer-spin-button,.qty-input::-webkit-inner-spin-button{-webkit-appearance:none}
+    .add-to-cart-btn{flex:1;padding:0 24px;height:50px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:var(--font);transition:background .15s}
+    .add-to-cart-btn:hover{background:var(--accent-hover)}
+    .wishlist-btn-full{width:100%;height:48px;border:1px solid var(--border);border-radius:6px;background:none;font-size:0.84rem;font-weight:600;color:var(--text-2);cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;margin-bottom:20px}
+    .wishlist-btn-full svg{width:16px;height:16px}
+    .wishlist-btn-full:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Meta badges */
+    .pi-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+    .meta-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:var(--light-gray);font-size:0.76rem;font-weight:600;color:var(--text-2)}
+    .meta-badge svg{width:14px;height:14px;flex-shrink:0}
+    .meta-badge.green{background:#e8f7ee;color:var(--green)}
+
+    /* Tabs */
+    .product-tabs{margin-top:48px;max-width:1400px;margin-left:auto;margin-right:auto;padding:0 24px}
+    .tab-nav{display:flex;border-bottom:2px solid var(--border);gap:0;margin-bottom:28px}
+    .tab-nav-btn{padding:12px 20px;font-size:0.82rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--text-2);border-bottom:2px solid transparent;margin-bottom:-2px;font-family:var(--font);transition:color .15s}
+    .tab-nav-btn.active,.tab-nav-btn:hover{color:var(--accent);border-bottom-color:var(--accent)}
+    .tab-pane{display:none;font-size:0.88rem;color:var(--text-2);line-height:1.8}
+    .tab-pane.active{display:block}
+    .tab-pane ul{padding-left:20px}
+    .tab-pane li{margin-bottom:6px}
+
+    /* Related products */
+    .related-section{max-width:1400px;margin:48px auto 80px;padding:0 24px}
+
+    @media(max-width:960px){
+      .product-layout{grid-template-columns:1fr;gap:32px;padding:24px 16px 60px}
+      .pi-title{font-size:1.6rem}
+    }
+    @media(max-width:640px){
+      .gallery-thumbs{grid-template-columns:repeat(4,1fr)}
+      .qty-add-row{flex-direction:column}
+      .add-to-cart-btn{width:100%}
+      .product-tabs{padding:0 16px}
+      .related-section{padding:0 16px}
+    }
+
+    body.dark-mode .gallery-main{background:var(--light-gray)}
+    body.dark-mode .gallery-thumb{background:var(--light-gray)}
+    body.dark-mode .sz-btn{background:var(--white);border-color:var(--border);color:var(--text-2)}
+    body.dark-mode .qty-selector{background:var(--white);border-color:var(--border)}
+    body.dark-mode .qty-input{background:var(--white);color:var(--text);border-color:var(--border)}
+    body.dark-mode .wishlist-btn-full{border-color:var(--border);color:var(--text-2)}
+    body.dark-mode .meta-badge{background:var(--light-gray)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <div class="header-search">
+          <input type="search" id="headerSearch" placeholder="Search styles, brands…" autocomplete="off" />
+          <button id="searchSubmit" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </button>
+        </div>
+        <button class="hicon" aria-label="Account" onclick="location.href='account.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="hicon" aria-label="Wishlist" onclick="location.href='wishlist.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-bar__inner">
+      <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Gift Wrapping</span>
+      <span class="trust-sep"></span>
+      <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>Easy &amp; Free Returns</span>
+      <span class="trust-sep"></span>
+      <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Student Discount</span>
+      <span class="trust-sep"></span>
+      <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Secure Shopping</span>
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="clothing.html">Home</a> &rsaquo; <a href="shop.html">Women</a> &rsaquo; <a href="shop.html">Sweatshirts</a> &rsaquo; Essential Oversized Hoodie
+  </div>
+
+  <!-- PRODUCT LAYOUT -->
+  <div class="product-layout">
+
+    <!-- GALLERY -->
+    <div class="product-gallery">
+      <div class="gallery-main">
+        <span class="gallery-badge">NEW</span>
+        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=700&q=80" alt="Essential Oversized Hoodie — front" id="galleryMain" />
+      </div>
+      <div class="gallery-thumbs">
+        <div class="gallery-thumb active" onclick="setMain(this,'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=700&q=80')">
+          <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&q=80" alt="Front" />
+        </div>
+        <div class="gallery-thumb" onclick="setMain(this,'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80')">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&q=80" alt="Detail" />
+        </div>
+        <div class="gallery-thumb" onclick="setMain(this,'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=700&q=80')">
+          <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=200&q=80" alt="Side" />
+        </div>
+        <div class="gallery-thumb" onclick="setMain(this,'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=700&q=80')">
+          <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=200&q=80" alt="Back" />
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="product-info">
+      <p class="pi-eyebrow">Sweatshirts &amp; Hoodies</p>
+      <h1 class="pi-title">Essential Oversized Hoodie</h1>
+      <div class="pi-rating">
+        <span class="pi-stars">★★★★★</span>
+        <span class="pi-reviews">4.8 · 128 reviews</span>
+      </div>
+      <div class="pi-price">
+        <span class="price-now">$49.99</span>
+        <span class="price-was">$69.99</span>
+        <span class="price-save">Save $20</span>
+      </div>
+      <p class="pi-desc">The ultimate loungewear staple. Crafted from a heavyweight cotton-blend fleece with a relaxed, oversized silhouette. Features a kangaroo pocket, adjustable drawstring hood, and ribbed cuffs and hem. Perfect for layering or wearing solo.</p>
+
+      <hr class="pi-divider" />
+
+      <div class="pi-label">Colour: <span>Chalk White</span></div>
+      <div class="swatch-row">
+        <span class="swatch active" style="background:#f5f5f0" title="Chalk White"></span>
+        <span class="swatch" style="background:#222222" title="Black"></span>
+        <span class="swatch" style="background:#c8b8a8" title="Sand"></span>
+        <span class="swatch" style="background:#8ba3b0" title="Slate Blue"></span>
+        <span class="swatch" style="background:#c97070" title="Dusty Rose"></span>
+      </div>
+
+      <div class="pi-label">Size: <span>M</span></div>
+      <div class="size-row">
+        <button class="sz-btn oos">XS</button>
+        <button class="sz-btn">S</button>
+        <button class="sz-btn active">M</button>
+        <button class="sz-btn">L</button>
+        <button class="sz-btn">XL</button>
+        <button class="sz-btn">XXL</button>
+      </div>
+      <span class="size-guide-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Size Guide
+      </span>
+
+      <div class="qty-add-row">
+        <div class="qty-selector">
+          <button class="qty-btn" id="qtyMinus">&#8722;</button>
+          <input type="number" class="qty-input" id="qtyInput" value="1" min="1" max="10" />
+          <button class="qty-btn" id="qtyPlus">&#43;</button>
+        </div>
+        <button class="add-to-cart-btn" id="pdpAddCart">Add to Bag</button>
+      </div>
+      <button class="wishlist-btn-full" id="pdpWishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Add to Wishlist
+      </button>
+
+      <div class="pi-meta">
+        <span class="meta-badge green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+          In Stock
+        </span>
+        <span class="meta-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Free shipping over $59
+        </span>
+        <span class="meta-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Free 30-day returns
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRODUCT TABS -->
+  <div class="product-tabs">
+    <div class="tab-nav">
+      <button class="tab-nav-btn active" data-tab="description">Description</button>
+      <button class="tab-nav-btn" data-tab="sizing">Size Guide</button>
+      <button class="tab-nav-btn" data-tab="delivery">Delivery &amp; Returns</button>
+      <button class="tab-nav-btn" data-tab="reviews">Reviews (128)</button>
+    </div>
+    <div class="tab-pane active" id="tab-description">
+      <p>The Essential Oversized Hoodie is your new go-to layering piece for any season. Constructed from a premium 380gsm cotton-polyester fleece, it's soft inside and structured outside.</p>
+      <ul>
+        <li>80% Cotton, 20% Polyester</li>
+        <li>380gsm heavyweight fleece</li>
+        <li>Relaxed oversized fit — we recommend going true to size</li>
+        <li>Kangaroo front pocket</li>
+        <li>Adjustable 2-ply drawstring hood</li>
+        <li>Ribbed cuffs and hem</li>
+        <li>Unisex fit</li>
+        <li>Machine washable at 30°C</li>
+      </ul>
+    </div>
+    <div class="tab-pane" id="tab-sizing">
+      <p>Our hoodies are designed with a relaxed, oversized fit. For a more fitted look, size down. All measurements are in cm.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin-top:16px">
+        <thead><tr style="background:var(--light-gray)"><th style="padding:10px;border:1px solid var(--border);text-align:left">Size</th><th style="padding:10px;border:1px solid var(--border)">Chest</th><th style="padding:10px;border:1px solid var(--border)">Length</th><th style="padding:10px;border:1px solid var(--border)">Sleeve</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:10px;border:1px solid var(--border)">XS</td><td style="padding:10px;border:1px solid var(--border);text-align:center">94</td><td style="padding:10px;border:1px solid var(--border);text-align:center">66</td><td style="padding:10px;border:1px solid var(--border);text-align:center">58</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border)">S</td><td style="padding:10px;border:1px solid var(--border);text-align:center">100</td><td style="padding:10px;border:1px solid var(--border);text-align:center">68</td><td style="padding:10px;border:1px solid var(--border);text-align:center">60</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border)">M</td><td style="padding:10px;border:1px solid var(--border);text-align:center">106</td><td style="padding:10px;border:1px solid var(--border);text-align:center">70</td><td style="padding:10px;border:1px solid var(--border);text-align:center">62</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border)">L</td><td style="padding:10px;border:1px solid var(--border);text-align:center">112</td><td style="padding:10px;border:1px solid var(--border);text-align:center">72</td><td style="padding:10px;border:1px solid var(--border);text-align:center">64</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border)">XL</td><td style="padding:10px;border:1px solid var(--border);text-align:center">120</td><td style="padding:10px;border:1px solid var(--border);text-align:center">74</td><td style="padding:10px;border:1px solid var(--border);text-align:center">66</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="tab-delivery">
+      <ul>
+        <li><strong>Standard Delivery (3–5 business days)</strong> — $4.99. Free on orders over $59.</li>
+        <li><strong>Express Delivery (1–2 business days)</strong> — $9.99.</li>
+        <li><strong>Next Day Delivery</strong> — $14.99 (order before 2pm).</li>
+      </ul>
+      <br>
+      <p><strong>Returns:</strong> Free returns within 30 days of purchase. Items must be unworn, unwashed, and with all original tags attached. Start your return from your account page.</p>
+    </div>
+    <div class="tab-pane" id="tab-reviews">
+      <p style="color:var(--text-2);font-size:.88rem">128 verified customer reviews. Average rating: ★★★★★ 4.8/5.</p>
+      <br>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:14px">
+        <strong style="font-size:.88rem">Sarah M.</strong> <span style="color:var(--gold);font-size:.85rem">★★★★★</span> <span style="font-size:.76rem;color:var(--mid-gray);margin-left:8px">Verified purchase</span>
+        <p style="margin-top:8px;font-size:.85rem;color:var(--text-2)">Absolutely love this hoodie! The quality is amazing, super soft and the oversized fit is exactly as described. Will definitely be buying more colours.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:14px">
+        <strong style="font-size:.88rem">James T.</strong> <span style="color:var(--gold);font-size:.85rem">★★★★☆</span> <span style="font-size:.76rem;color:var(--mid-gray);margin-left:8px">Verified purchase</span>
+        <p style="margin-top:8px;font-size:.85rem;color:var(--text-2)">Really good hoodie, great for the price. Sized up and it fits perfectly. Delivery was fast too.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED PRODUCTS -->
+  <section class="related-section">
+    <div class="section-title-wrap section-title-wrap--flex">
+      <h2 class="section-title">You May Also Like</h2>
+      <a href="shop.html" class="view-all-link">View All &rsaquo;</a>
+    </div>
+    <div class="fp-carousel-wrap">
+      <button class="car-arrow car-arrow--prev" id="relPrev">&#8249;</button>
+      <div class="fp-carousel" id="relCarousel"></div>
+      <button class="car-arrow car-arrow--next" id="relNext">&#8250;</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="footer-col footer-col--brand">
+        <div class="footer-logo">Clothing</div>
+        <p>123 Fashion Street<br>New York, NY 10001</p>
+        <p>hello@clothing.com<br>+1 (212) 555-0100</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop By</h4><ul><li><a href="shop.html?cat=women">Women</a></li><li><a href="shop.html?cat=men">Men</a></li><li><a href="shop.html?cat=new">New Arrivals</a></li><li><a href="shop.html?cat=sale">Sale</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="about.html">About Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+      <div class="footer-col"><h4>Customer Service</h4><ul><li><a href="faq.html">Help &amp; FAQs</a></li><li><a href="account.html">Track Your Order</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+      <div class="footer-col footer-col--newsletter">
+        <h4>Newsletter</h4>
+        <p>Subscribe for exclusive offers &amp; style updates.</p>
+        <form class="footer-form" id="footerForm"><input type="email" placeholder="Enter your email" required /><button type="submit">Submit</button></form>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>&copy; 2026 Clothing. All rights reserved.</p>
+      <div class="payment-icons"><span class="pay-icon">VISA</span><span class="pay-icon">MC</span><span class="pay-icon">AMEX</span><span class="pay-icon">PayPal</span><span class="pay-icon">Apple Pay</span></div>
+    </div>
+  </footer>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block" onclick="location.href='cart.html'">View Bag &amp; Checkout</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="clothing.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    // Gallery switcher
+    window.setMain = function(thumb, src){
+      document.getElementById('galleryMain').src = src;
+      document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    };
+
+    // Qty buttons
+    const qtyInput = document.getElementById('qtyInput');
+    document.getElementById('qtyMinus').addEventListener('click', function(){
+      if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    });
+    document.getElementById('qtyPlus').addEventListener('click', function(){
+      if(parseInt(qtyInput.value) < 10) qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
+
+    // Size selection
+    document.querySelectorAll('.sz-btn:not(.oos)').forEach(b => {
+      b.addEventListener('click', function(){
+        document.querySelectorAll('.sz-btn').forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+        const label = document.querySelector('.pi-label span');
+        if(label) label.textContent = this.textContent.trim();
+      });
+    });
+
+    // Colour swatches
+    document.querySelectorAll('.swatch').forEach(s => {
+      s.addEventListener('click', function(){
+        document.querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+        const label = document.querySelectorAll('.pi-label span')[0];
+        if(label) label.textContent = this.title;
+      });
+    });
+
+    // Add to cart (product id=1 from MH_PRODUCTS)
+    document.getElementById('pdpAddCart').addEventListener('click', function(){
+      const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+      if(typeof addToCart === 'function'){
+        for(let i=0;i<qty;i++) addToCart(1);
+      }
+    });
+
+    // Tabs
+    document.querySelectorAll('.tab-nav-btn').forEach(btn => {
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        const pane = document.getElementById('tab-' + this.dataset.tab);
+        if(pane) pane.classList.add('active');
+      });
+    });
+
+    // Related products carousel
+    const relCarousel = document.getElementById('relCarousel');
+    if(relCarousel && typeof ALL_PRODUCTS !== 'undefined'){
+      ALL_PRODUCTS.slice(0,6).forEach(p => {
+        const card = renderProductCard(p);
+        if(card) relCarousel.appendChild(card);
+      });
+    }
+    // Simple arrow scroll for related
+    const relPrev = document.getElementById('relPrev');
+    const relNext = document.getElementById('relNext');
+    if(relPrev && relNext && relCarousel){
+      relNext.addEventListener('click', () => { relCarousel.scrollBy({left:240,behavior:'smooth'}); });
+      relPrev.addEventListener('click', () => { relCarousel.scrollBy({left:-240,behavior:'smooth'}); });
+    }
+  })();
+  </script>
+</body>
+</html>

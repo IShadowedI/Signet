@@ -1,0 +1,17 @@
+# Postgres for when you graduate from the dev SQLite database.
+# Update DATABASE_URL and the Prisma datasource provider to use this.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: signet
+      POSTGRES_PASSWORD: signet
+      POSTGRES_DB: signet
+    ports:
+      - "5432:5432"
+    volumes:
+      - signet_pg:/var/lib/postgresql/data
+
+volumes:
+  signet_pg:

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Bag — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    .page-hero{background:var(--light-gray);padding:52px 24px;text-align:center}
+    .page-hero__title{font-family:var(--serif);font-size:2.4rem;font-weight:700;color:var(--black);margin-bottom:8px}
+    .page-hero__crumb{font-size:0.78rem;color:var(--text-2)}
+    .page-hero__crumb a{color:var(--text-2)}
+    .page-hero__crumb a:hover{color:var(--accent)}
+
+    .cart-layout{max-width:1200px;margin:0 auto;padding:48px 24px 80px;display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
+
+    /* Cart table */
+    .cart-table{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .cart-table-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 40px;gap:16px;padding:14px 20px;background:var(--light-gray);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-2)}
+    .cart-item{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 40px;gap:16px;padding:20px;border-top:1px solid var(--border);align-items:center}
+    .cart-item__product{display:flex;gap:16px;align-items:center}
+    .cart-item__img{width:80px;height:100px;border-radius:6px;object-fit:cover;background:var(--light-gray);flex-shrink:0}
+    .cart-item__details{}
+    .cart-item__name{font-size:0.88rem;font-weight:600;color:var(--black);margin-bottom:4px}
+    .cart-item__name a{color:inherit;text-decoration:none}
+    .cart-item__name a:hover{color:var(--accent)}
+    .cart-item__meta{font-size:0.76rem;color:var(--text-2)}
+    .cart-item__price{font-size:0.9rem;font-weight:600;color:var(--black)}
+    .cart-item__price .was{font-size:0.76rem;color:var(--mid-gray);text-decoration:line-through;display:block}
+    .cart-item__qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:5px;overflow:hidden;width:fit-content;background:var(--white)}
+    .cart-qty-btn{width:32px;height:32px;background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--text-2);transition:color .15s;font-family:var(--font)}
+    .cart-qty-btn:hover{color:var(--accent)}
+    .cart-qty-val{width:36px;text-align:center;font-size:0.84rem;font-weight:600;color:var(--text);font-family:var(--font);border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:var(--white);height:32px}
+    .cart-item__total{font-size:0.9rem;font-weight:700;color:var(--black)}
+    .cart-remove{background:none;border:none;cursor:pointer;color:var(--mid-gray);font-size:1.2rem;line-height:1;transition:color .15s;padding:0}
+    .cart-remove:hover{color:var(--accent)}
+    .cart-empty{text-align:center;padding:80px 24px;color:var(--text-2)}
+    .cart-empty svg{width:64px;height:64px;margin-bottom:20px;color:var(--border)}
+    .cart-empty h3{font-size:1.3rem;font-weight:700;margin-bottom:10px;color:var(--black)}
+    .cart-empty p{margin-bottom:24px}
+    .cart-footer{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+    .cart-footer a{font-size:0.82rem;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:6px}
+    .cart-footer a svg{width:14px;height:14px}
+    .cart-footer a:hover{color:var(--accent)}
+
+    /* Coupon */
+    .coupon-row{display:flex;gap:8px;margin-top:20px}
+    .coupon-input{flex:1;border:1px solid var(--border);border-radius:6px;padding:11px 14px;font-size:0.84rem;font-family:var(--font);color:var(--text);background:var(--white)}
+    .coupon-input::placeholder{color:var(--mid-gray)}
+    .coupon-input:focus{outline:none;border-color:var(--accent)}
+    .coupon-btn{padding:0 18px;background:var(--black);color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:background .15s;white-space:nowrap}
+    .coupon-btn:hover{background:var(--accent)}
+
+    /* Order summary */
+    .order-summary{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;position:sticky;top:120px}
+    .os-title{font-size:1rem;font-weight:700;margin-bottom:20px;color:var(--black)}
+    .os-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:0.86rem;color:var(--text-2);border-bottom:1px solid var(--border)}
+    .os-row:last-of-type{border-bottom:none}
+    .os-row.total{font-size:1rem;font-weight:700;color:var(--black);padding-top:14px}
+    .os-row .saving{color:var(--accent);font-weight:700}
+    .checkout-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:var(--font);margin-top:20px;transition:background .15s}
+    .checkout-btn:hover{background:var(--accent-hover)}
+    .paypal-btn{width:100%;padding:14px;background:#ffc439;color:#111;border:none;border-radius:8px;font-size:0.84rem;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:10px;transition:opacity .15s}
+    .paypal-btn:hover{opacity:.85}
+    .os-secure{display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.74rem;color:var(--mid-gray);margin-top:14px}
+    .os-secure svg{width:12px;height:12px}
+    .os-divider{border:none;border-top:1px dashed var(--border);margin:16px 0}
+
+    @media(max-width:960px){
+      .cart-layout{grid-template-columns:1fr;padding:32px 16px 60px}
+      .order-summary{position:static}
+      .cart-table-header{display:none}
+      .cart-item{grid-template-columns:1fr;gap:10px}
+      .cart-item__product{grid-column:1}
+    }
+    @media(max-width:640px){
+      .page-hero__title{font-size:2rem}
+    }
+
+    body.dark-mode .cart-table{background:var(--white);border-color:var(--border)}
+    body.dark-mode .cart-table-header{background:var(--light-gray)}
+    body.dark-mode .cart-item{border-color:var(--border)}
+    body.dark-mode .cart-item__qty{background:var(--white);border-color:var(--border)}
+    body.dark-mode .cart-qty-val{background:var(--white);border-color:var(--border);color:var(--text)}
+    body.dark-mode .order-summary{background:var(--white);border-color:var(--border)}
+    body.dark-mode .os-row{border-color:var(--border)}
+    body.dark-mode .coupon-input{background:var(--white);border-color:var(--border);color:var(--text)}
+    body.dark-mode .page-hero{background:var(--light-gray)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <div class="header-search">
+          <input type="search" id="headerSearch" placeholder="Search styles, brands…" autocomplete="off" />
+          <button id="searchSubmit" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </button>
+        </div>
+        <button class="hicon" aria-label="Account" onclick="location.href='account.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="hicon" aria-label="Wishlist" onclick="location.href='wishlist.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <h1 class="page-hero__title">Shopping Bag</h1>
+    <p class="page-hero__crumb"><a href="clothing.html">Home</a> &rsaquo; Cart</p>
+  </div>
+
+  <!-- CART LAYOUT -->
+  <div class="cart-layout">
+
+    <div>
+      <!-- Cart table -->
+      <div class="cart-table" id="cartTableWrap">
+        <div class="cart-table-header">
+          <span>Product</span>
+          <span>Price</span>
+          <span>Quantity</span>
+          <span>Total</span>
+          <span></span>
+        </div>
+
+        <!-- Populated by JS below -->
+        <div id="cartTableBody"></div>
+
+        <div class="cart-footer">
+          <a href="shop.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+
+      <!-- Coupon -->
+      <div class="coupon-row">
+        <input type="text" class="coupon-input" id="couponInput" placeholder="Discount code or gift card" autocomplete="off" />
+        <button class="coupon-btn" id="couponApply">Apply</button>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <aside class="order-summary">
+      <h2 class="os-title">Order Summary</h2>
+      <div class="os-row"><span>Subtotal (<span id="osItemCount">0</span> items)</span><span id="osSubtotal">$0.00</span></div>
+      <div class="os-row"><span>Discount</span><span class="saving" id="osDiscount">−$0.00</span></div>
+      <div class="os-row"><span>Shipping</span><span id="osShipping">Free</span></div>
+      <hr class="os-divider">
+      <div class="os-row total"><span>Total</span><span id="osTotal">$0.00</span></div>
+      <button class="checkout-btn" onclick="location.href='checkout.html'">Proceed to Checkout</button>
+      <button class="paypal-btn">
+        Pay with <strong>PayPal</strong>
+      </button>
+      <p class="os-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Secure &amp; encrypted checkout
+      </p>
+    </aside>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="footer-col footer-col--brand">
+        <div class="footer-logo">Clothing</div>
+        <p>123 Fashion Street<br>New York, NY 10001</p>
+        <p>hello@clothing.com<br>+1 (212) 555-0100</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop By</h4><ul><li><a href="shop.html?cat=women">Women</a></li><li><a href="shop.html?cat=men">Men</a></li><li><a href="shop.html?cat=new">New Arrivals</a></li><li><a href="shop.html?cat=sale">Sale</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="about.html">About Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+      <div class="footer-col"><h4>Customer Service</h4><ul><li><a href="faq.html">Help &amp; FAQs</a></li><li><a href="account.html">Track Your Order</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+      <div class="footer-col footer-col--newsletter">
+        <h4>Newsletter</h4>
+        <p>Subscribe for exclusive offers &amp; style updates.</p>
+        <form class="footer-form" id="footerForm"><input type="email" placeholder="Enter your email" required /><button type="submit">Submit</button></form>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>&copy; 2026 Clothing. All rights reserved.</p>
+      <div class="payment-icons"><span class="pay-icon">VISA</span><span class="pay-icon">MC</span><span class="pay-icon">AMEX</span><span class="pay-icon">PayPal</span><span class="pay-icon">Apple Pay</span></div>
+    </div>
+  </footer>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block" onclick="location.href='checkout.html'">Checkout</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="clothing.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    function renderCartPage(){
+      const body = document.getElementById('cartTableBody');
+      if(!body) return;
+      const cartData = typeof cart !== 'undefined' ? cart : JSON.parse(localStorage.getItem('cl_cart') || '[]');
+      const products = typeof ALL_PRODUCTS !== 'undefined' ? ALL_PRODUCTS : [];
+
+      if(cartData.length === 0){
+        body.innerHTML = '<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><h3>Your bag is empty</h3><p>Looks like you haven\'t added anything yet.</p><a href="shop.html" class="btn btn--dark">Start Shopping</a></div>';
+        document.getElementById('osItemCount').textContent = '0';
+        document.getElementById('osSubtotal').textContent = '$0.00';
+        document.getElementById('osTotal').textContent = '$0.00';
+        return;
+      }
+
+      let html = '';
+      let subtotal = 0;
+      let totalItems = 0;
+      cartData.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        if(!product) return;
+        const lineTotal = product.price * item.qty;
+        subtotal += lineTotal;
+        totalItems += item.qty;
+        html += `<div class="cart-item" data-id="${product.id}">
+          <div class="cart-item__product">
+            <img class="cart-item__img" src="${product.img}" alt="${product.name}" />
+            <div class="cart-item__details">
+              <div class="cart-item__name"><a href="product.html">${product.name}</a></div>
+              <div class="cart-item__meta">Size: M &nbsp;|&nbsp; Colour: Black</div>
+            </div>
+          </div>
+          <div class="cart-item__price">
+            ${product.oldPrice ? `<span class="was">$${product.oldPrice.toFixed(2)}</span>` : ''}
+            $${product.price.toFixed(2)}
+          </div>
+          <div class="cart-item__qty">
+            <button class="cart-qty-btn" onclick="changeCartQty(${product.id},-1)">&#8722;</button>
+            <input class="cart-qty-val" type="number" value="${item.qty}" min="1" max="10" onchange="setCartQty(${product.id},this.value)" />
+            <button class="cart-qty-btn" onclick="changeCartQty(${product.id},1)">&#43;</button>
+          </div>
+          <div class="cart-item__total">$${lineTotal.toFixed(2)}</div>
+          <button class="cart-remove" onclick="removeFromCart(${product.id})" aria-label="Remove">&#215;</button>
+        </div>`;
+      });
+      body.innerHTML = html;
+
+      const shipping = subtotal >= 59 ? 0 : 4.99;
+      const shippingEl = document.getElementById('osShipping');
+      if(shippingEl) shippingEl.textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
+      const itemCountEl = document.getElementById('osItemCount');
+      if(itemCountEl) itemCountEl.textContent = totalItems;
+      const subtotalEl = document.getElementById('osSubtotal');
+      if(subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+      const totalEl = document.getElementById('osTotal');
+      if(totalEl) totalEl.textContent = `$${(subtotal + shipping).toFixed(2)}`;
+    }
+
+    window.changeCartQty = function(id, delta){
+      if(typeof cart === 'undefined') return;
+      const item = cart.find(i => i.id === id);
+      if(!item) return;
+      const newQty = item.qty + delta;
+      if(newQty < 1){ removeFromCart(id); return; }
+      item.qty = Math.min(newQty, 10);
+      if(typeof updateCartUI === 'function') updateCartUI();
+      localStorage.setItem('cl_cart', JSON.stringify(cart));
+      renderCartPage();
+    };
+
+    window.setCartQty = function(id, val){
+      if(typeof cart === 'undefined') return;
+      const item = cart.find(i => i.id === id);
+      if(!item) return;
+      const qty = Math.max(1, Math.min(10, parseInt(val) || 1));
+      item.qty = qty;
+      if(typeof updateCartUI === 'function') updateCartUI();
+      localStorage.setItem('cl_cart', JSON.stringify(cart));
+      renderCartPage();
+    };
+
+    // Coupon
+    const couponBtn = document.getElementById('couponApply');
+    if(couponBtn){
+      couponBtn.addEventListener('click', function(){
+        const code = document.getElementById('couponInput').value.trim().toUpperCase();
+        if(code === 'WELCOME10'){
+          document.getElementById('osDiscount').textContent = '−10%';
+          if(typeof showToast === 'function') showToast('Coupon applied: 10% off!');
+        } else if(code){
+          if(typeof showToast === 'function') showToast('Invalid coupon code.');
+        }
+      });
+    }
+
+    // Render on load and re-render when cart changes
+    renderCartPage();
+    document.addEventListener('cartUpdated', renderCartPage);
+  })();
+  </script>
+</body>
+</html>

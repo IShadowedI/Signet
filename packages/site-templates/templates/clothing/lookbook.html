@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lookbook — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    /* Lookbook hero */
+    .lb-hero{position:relative;height:70vh;min-height:480px;max-height:700px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .lb-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .lb-hero__overlay{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,.15) 0%, rgba(0,0,0,.5) 100%)}
+    .lb-hero__content{position:relative;text-align:center;color:#fff;padding:0 24px}
+    .lb-hero__season{font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:14px;opacity:.85}
+    .lb-hero__title{font-family:var(--serif);font-size:clamp(2.5rem,6vw,5rem);font-weight:700;line-height:1.1;margin-bottom:18px}
+    .lb-hero__cta{display:inline-block;padding:13px 36px;background:#fff;color:var(--black);font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:background .15s}
+    .lb-hero__cta:hover{background:var(--accent);color:#fff}
+
+    /* Intro strip */
+    .lb-intro{max-width:640px;margin:0 auto;text-align:center;padding:52px 24px 20px}
+    .lb-intro__label{font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .lb-intro__text{font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--black);line-height:1.35}
+    .lb-intro__sub{font-size:0.87rem;color:var(--text-2);line-height:1.8;margin-top:14px}
+
+    /* Season filter tabs */
+    .lb-filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:24px 24px 36px}
+    .lb-filter-btn{padding:8px 20px;border:1px solid var(--border);border-radius:30px;font-size:0.78rem;font-weight:600;color:var(--text-2);background:var(--white);cursor:pointer;font-family:var(--font);transition:all .15s}
+    .lb-filter-btn:hover,.lb-filter-btn.active{background:var(--black);color:#fff;border-color:var(--black)}
+
+    /* Editorial grid */
+    .lb-grid{max-width:1300px;margin:0 auto;padding:0 20px 80px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .lb-item{position:relative;overflow:hidden;border-radius:8px;cursor:pointer}
+    .lb-item--full{grid-column:1/-1}
+    .lb-item--tall{grid-row:span 2}
+    .lb-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .lb-item:hover .lb-img{transform:scale(1.04)}
+    .lb-item--full .lb-img{height:520px}
+    .lb-item--std .lb-img{height:480px}
+    .lb-item--tall .lb-img{height:100%}
+    .lb-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 50%);opacity:0;transition:opacity .3s}
+    .lb-item:hover .lb-overlay{opacity:1}
+    .lb-caption{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;transform:translateY(8px);transition:transform .3s;color:#fff}
+    .lb-item:hover .lb-caption{transform:translateY(0)}
+    .lb-caption__tag{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;opacity:.8;margin-bottom:7px}
+    .lb-caption__title{font-family:var(--serif);font-size:1.35rem;font-weight:700;line-height:1.2;margin-bottom:14px}
+    .lb-caption__btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;background:#fff;color:var(--black);font-size:0.76rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:background .15s}
+    .lb-caption__btn:hover{background:var(--accent);color:#fff}
+    .lb-caption__btn svg{width:14px;height:14px}
+
+    /* Two-col editorial promo */
+    .lb-editorial{max-width:1300px;margin:0 auto;padding:0 20px 40px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+    .lb-editorial-img{border-radius:8px;overflow:hidden;aspect-ratio:4/5}
+    .lb-editorial-img img{width:100%;height:100%;object-fit:cover}
+    .lb-editorial-content{padding:24px}
+    .lb-ed-label{font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+    .lb-ed-title{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--black);line-height:1.25;margin-bottom:14px}
+    .lb-ed-body{font-size:0.88rem;color:var(--text-2);line-height:1.8;margin-bottom:24px}
+    .lb-ed-cta{display:inline-flex;align-items:center;gap:8px;font-size:0.78rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--black);text-decoration:none;padding-bottom:3px;border-bottom:2px solid var(--accent)}
+    .lb-ed-cta:hover{color:var(--accent)}
+
+    /* Three-item row */
+    .lb-row3{max-width:1300px;margin:0 auto;padding:0 20px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .lb-row3-item{position:relative;overflow:hidden;border-radius:8px;cursor:pointer}
+    .lb-row3-item .lb-img{height:440px;width:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .lb-row3-item:hover .lb-img{transform:scale(1.04)}
+    .lb-row3-item .lb-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 50%);opacity:0;transition:opacity .3s}
+    .lb-row3-item:hover .lb-overlay{opacity:1}
+    .lb-row3-item .lb-caption{position:absolute;bottom:0;left:0;right:0;padding:20px;transform:translateY(8px);transition:transform .3s;color:#fff}
+    .lb-row3-item:hover .lb-caption{transform:translateY(0)}
+
+    @media(max-width:960px){
+      .lb-grid{grid-template-columns:1fr;padding:0 16px 60px}
+      .lb-item--tall{grid-row:auto}
+      .lb-editorial{grid-template-columns:1fr;padding:0 16px 40px}
+      .lb-editorial-img{aspect-ratio:16/9}
+      .lb-row3{grid-template-columns:1fr;padding:0 16px 60px}
+      .lb-row3-item .lb-img{height:300px}
+    }
+    @media(max-width:640px){
+      .lb-hero{height:55vh}
+      .lb-item--full .lb-img{height:300px}
+      .lb-item--std .lb-img{height:280px}
+    }
+
+    body.dark-mode .lb-filter-btn{background:var(--white);border-color:var(--border);color:var(--text-2)}
+    body.dark-mode .lb-filter-btn.active{background:var(--black);color:#fff;border-color:var(--black)}
+    body.dark-mode .lb-ed-title,.body.dark-mode .lb-ed-body{color:var(--black)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html" class="active">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <div class="header-search"><input type="search" id="headerSearch" placeholder="Search styles, brands…" autocomplete="off" /><button id="searchSubmit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
+        <button class="hicon" aria-label="Account" onclick="location.href='account.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="hicon" aria-label="Wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span class="cart-badge" id="cartBadge">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar"><div class="trust-bar__inner">
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Gift Wrapping</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>Easy &amp; Free Returns</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Student Discount</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Secure Shopping</span>
+  </div></div>
+
+  <!-- LOOKBOOK HERO -->
+  <section class="lb-hero">
+    <img class="lb-hero__img" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1600&q=85" alt="SS 2026 Lookbook" />
+    <div class="lb-hero__overlay"></div>
+    <div class="lb-hero__content">
+      <p class="lb-hero__season">Spring / Summer 2026</p>
+      <h1 class="lb-hero__title">New Horizons</h1>
+      <a href="shop.html" class="lb-hero__cta">Shop the Collection</a>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <div class="lb-intro">
+    <p class="lb-intro__label">The Lookbook</p>
+    <h2 class="lb-intro__text">Discover the pieces that define the season</h2>
+    <p class="lb-intro__sub">From relaxed weekend dressing to elevated eveningwear, explore SS26 through the lens of our creative director.</p>
+  </div>
+
+  <!-- SEASON FILTERS -->
+  <div class="lb-filters">
+    <button class="lb-filter-btn active" data-season="all">All Seasons</button>
+    <button class="lb-filter-btn" data-season="ss26">SS 2026</button>
+    <button class="lb-filter-btn" data-season="aw25">AW 2025</button>
+    <button class="lb-filter-btn" data-season="ss25">SS 2025</button>
+  </div>
+
+  <!-- EDITORIAL GRID -->
+  <div class="lb-grid">
+    <!-- Full-width item -->
+    <div class="lb-item lb-item--full">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&q=80" alt="The Minimalist Edit" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2026 — Women</p>
+        <h3 class="lb-caption__title">The Minimalist Edit</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop the Look <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Left tall + right stacked -->
+    <div class="lb-item lb-item--tall lb-item--std">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700&q=80" alt="Urban Nomad" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2026 — Women</p>
+        <h3 class="lb-caption__title">Urban Nomad</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop the Look <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="lb-item lb-item--std">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=700&q=80" alt="Soft Tailoring" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2026 — Men</p>
+        <h3 class="lb-caption__title">Soft Tailoring</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop the Look <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="lb-item lb-item--std">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=700&q=80" alt="Coast & Denim" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2026 — Unisex</p>
+        <h3 class="lb-caption__title">Coast &amp; Denim</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop the Look <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITORIAL TWO-COL -->
+  <div class="lb-editorial">
+    <div class="lb-editorial-img">
+      <img src="https://images.unsplash.com/photo-1475180429745-788061882ded?w=700&q=80" alt="Studio Sessions" loading="lazy" />
+    </div>
+    <div class="lb-editorial-content">
+      <p class="lb-ed-label">Editor's Pick — AW 2025</p>
+      <h2 class="lb-ed-title">Studio Sessions:<br>The Art of Layering</h2>
+      <p class="lb-ed-body">Autumn/Winter 2025 was a study in texture and weight. Rich camel coats over boxy knits, fluid trousers cut against stiff denim — every look a careful composition designed to move with you through the city.</p>
+      <a href="shop.html" class="lb-ed-cta">Shop AW 2025 <span style="margin-left:6px">&#8594;</span></a>
+    </div>
+  </div>
+
+  <!-- THREE-COL ROW -->
+  <div class="lb-row3">
+    <div class="lb-row3-item">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=600&q=80" alt="Night Edit" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">AW 2025 — Women</p>
+        <h3 class="lb-caption__title">The Night Edit</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="lb-row3-item">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80" alt="Sunday Linen" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2025 — Unisex</p>
+        <h3 class="lb-caption__title">Sunday Linen</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="lb-row3-item">
+      <img class="lb-img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80" alt="Power Dressing" loading="lazy" />
+      <div class="lb-overlay"></div>
+      <div class="lb-caption">
+        <p class="lb-caption__tag">SS 2025 — Women</p>
+        <h3 class="lb-caption__title">Power Dressing</h3>
+        <a href="shop.html" class="lb-caption__btn">Shop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="footer-col footer-col--brand">
+        <div class="footer-logo">Clothing</div>
+        <p>123 Fashion Street<br>New York, NY 10001</p>
+        <p>hello@clothing.com<br>+1 (212) 555-0100</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop By</h4><ul><li><a href="shop.html?cat=women">Women</a></li><li><a href="shop.html?cat=men">Men</a></li><li><a href="shop.html?cat=new">New Arrivals</a></li><li><a href="shop.html?cat=sale">Sale</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="about.html">About Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+      <div class="footer-col"><h4>Customer Service</h4><ul><li><a href="faq.html">Help &amp; FAQs</a></li><li><a href="account.html">Track Your Order</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+      <div class="footer-col footer-col--newsletter">
+        <h4>Newsletter</h4>
+        <p>Subscribe for exclusive offers &amp; style updates.</p>
+        <form class="footer-form" id="footerForm"><input type="email" placeholder="Enter your email" required /><button type="submit">Submit</button></form>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>&copy; 2026 Clothing. All rights reserved.</p>
+      <div class="payment-icons"><span class="pay-icon">VISA</span><span class="pay-icon">MC</span><span class="pay-icon">AMEX</span><span class="pay-icon">PayPal</span><span class="pay-icon">Apple Pay</span></div>
+    </div>
+  </footer>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block">Checkout</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+  <script src="clothing.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    document.querySelectorAll('.lb-filter-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.lb-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+        this.classList.add('active');
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+import { Router } from "express";
+import { adminTenantsRouter } from "./tenants";
+import { adminProductsRouter } from "./products";
+import { adminCatalogRouter } from "./catalog";
+import { adminUsersRouter } from "./users";
+import { adminOrdersRouter } from "./orders";
+import { adminCrmRouter } from "./crm";
+import { adminErpRouter } from "./erp";
+import { adminInvoicesRouter } from "./invoices";
+import { adminQuotesRouter } from "./quotes";
+import { adminReturnsRouter } from "./returns";
+import { adminShipmentsRouter } from "./shipments";
+import { adminSitesRouter } from "./sites";
+import { adminTemplatesRouter } from "./templates";
+
+export const adminRouter = Router();
+
+adminRouter.use("/tenants", adminTenantsRouter);
+adminRouter.use("/products", adminProductsRouter);
+adminRouter.use("/catalog", adminCatalogRouter);
+adminRouter.use("/users", adminUsersRouter);
+adminRouter.use("/orders", adminOrdersRouter);
+adminRouter.use("/crm", adminCrmRouter);
+adminRouter.use("/erp", adminErpRouter);
+adminRouter.use("/invoices", adminInvoicesRouter);
+adminRouter.use("/quotes", adminQuotesRouter);
+adminRouter.use("/returns", adminReturnsRouter);
+adminRouter.use("/shipments", adminShipmentsRouter);
+adminRouter.use("/sites", adminSitesRouter);
+adminRouter.use("/templates", adminTemplatesRouter);

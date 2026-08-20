@@ -1,0 +1,27 @@
+{
+  "slug": "clothing",
+  "name": "Clothing — Premium E-Commerce",
+  "description": "Full apparel storefront template: homepage, shop/category listing, product detail, cart, checkout, lookbook, account, about, contact, FAQ, and legal pages. Vanilla HTML/CSS/JS with CSS-variable theming.",
+  "category": "Apparel & Retail",
+  "entry": "clothing.html",
+  "thumbnail": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
+  "tags": ["ecommerce", "apparel", "retail", "storefront", "responsive"],
+  "pages": [
+    { "file": "clothing.html", "path": "/", "title": "Home", "isHome": true },
+    { "file": "shop.html", "path": "/shop", "title": "Shop" },
+    { "file": "product.html", "path": "/product", "title": "Product Detail" },
+    { "file": "cart.html", "path": "/cart", "title": "Cart" },
+    { "file": "checkout.html", "path": "/checkout", "title": "Checkout" },
+    { "file": "lookbook.html", "path": "/lookbook", "title": "Lookbook" },
+    { "file": "account.html", "path": "/account", "title": "My Account" },
+    { "file": "wishlist.html", "path": "/wishlist", "title": "Wishlist" },
+    { "file": "about.html", "path": "/about", "title": "About" },
+    { "file": "contact.html", "path": "/contact", "title": "Contact" },
+    { "file": "faq.html", "path": "/faq", "title": "FAQ" },
+    { "file": "privacy.html", "path": "/privacy", "title": "Privacy Policy" },
+    { "file": "terms.html", "path": "/terms", "title": "Terms" },
+    { "file": "404.html", "path": "/404", "title": "Not Found" }
+  ],
+  "stylesheets": ["clothing.css"],
+  "scripts": ["clothing.js"]
+}

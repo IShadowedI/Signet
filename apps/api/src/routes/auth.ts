@@ -1,0 +1,72 @@
+import { Router } from "express";
+import { eq, or } from "drizzle-orm";
+import { db } from "../db";
+import { internalUsers, tenants, users } from "../schema";
+import {
+  BUYER_COOKIE,
+  clearSessionCookie,
+  INTERNAL_COOKIE,
+  requireBuyerAuth,
+  requireInternalAuth,
+  setSessionCookie,
+  signToken,
+  verifyPassword,
+} from "../auth";
+
+export const authRouter = Router();
+
+// ---- Signet staff (admin app) ----
+
+authRouter.post("/internal/login", async (req, res) => {
+  const { email, password } = req.body ?? {};
+  const user = await db.query.internalUsers.findFirst({ where: eq(internalUsers.email, email ?? "") });
+  if (!user || !(await verifyPassword(password ?? "", user.passwordHash))) {
+    return res.status(401).json({ error: "Invalid email or password" });
+  }
+  const token = signToken({ scope: "internal", userId: user.id, role: user.role });
+  setSessionCookie(res, INTERNAL_COOKIE, token);
+  res.json({ id: user.id, email: user.email, name: user.name, role: user.role });
+});
+
+authRouter.post("/internal/logout", (_req, res) => {
+  clearSessionCookie(res, INTERNAL_COOKIE);
+  res.json({ ok: true });
+});
+
+authRouter.get("/internal/me", requireInternalAuth(), async (req, res) => {
+  const user = await db.query.internalUsers.findFirst({ where: eq(internalUsers.id, req.internalUser!.userId) });
+  if (!user) return res.status(404).json({ error: "Not found" });
+  res.json({ id: user.id, email: user.email, name: user.name, role: user.role });
+});
+
+// ---- Storefront buyers (per-tenant) ----
+
+authRouter.post("/storefront/:slug/login", async (req, res) => {
+  const { slug } = req.params;
+  const { email, password } = req.body ?? {};
+
+  const tenant = await db.query.tenants.findFirst({ where: or(eq(tenants.slug, slug), eq(tenants.domain, slug)) });
+  if (!tenant) return res.status(404).json({ error: `Unknown storefront "${slug}"` });
+
+  const user = await db.query.users.findFirst({
+    where: (u, { and }) => and(eq(u.tenantId, tenant.id), eq(u.email, email ?? "")),
+  });
+  if (!user || !user.passwordHash || !(await verifyPassword(password ?? "", user.passwordHash))) {
+    return res.status(401).json({ error: "Invalid email or password" });
+  }
+
+  const token = signToken({ scope: "buyer", userId: user.id, tenantId: tenant.id, role: user.role });
+  setSessionCookie(res, BUYER_COOKIE, token);
+  res.json({ id: user.id, email: user.email, name: user.name, role: user.role, allotmentBalance: user.allotmentBalance });
+});
+
+authRouter.post("/storefront/:slug/logout", (_req, res) => {
+  clearSessionCookie(res, BUYER_COOKIE);
+  res.json({ ok: true });
+});
+
+authRouter.get("/storefront/:slug/me", requireBuyerAuth, async (req, res) => {
+  const user = await db.query.users.findFirst({ where: eq(users.id, req.buyerUser!.userId) });
+  if (!user) return res.status(404).json({ error: "Not found" });
+  res.json({ id: user.id, email: user.email, name: user.name, role: user.role, allotmentBalance: user.allotmentBalance });
+});

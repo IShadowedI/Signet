@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    .err-section{min-height:calc(100vh - 300px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px}
+    .err-code{font-family:var(--serif);font-size:clamp(6rem,20vw,14rem);font-weight:700;line-height:1;color:var(--black);letter-spacing:-0.03em;position:relative;display:inline-block}
+    .err-code::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:4px;background:var(--accent)}
+    .err-title{font-family:var(--serif);font-size:clamp(1.5rem,4vw,2.4rem);font-weight:700;color:var(--black);margin:28px 0 12px}
+    .err-body{font-size:0.92rem;color:var(--text-2);max-width:440px;line-height:1.8;margin:0 auto 32px}
+    .err-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:52px}
+    .err-btn-back{padding:13px 28px;border:2px solid var(--black);border-radius:6px;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-family:var(--font);cursor:pointer;background:transparent;color:var(--black);transition:all .15s}
+    .err-btn-back:hover{background:var(--black);color:#fff}
+    .err-btn-home{padding:13px 28px;background:var(--accent);color:#fff;border:2px solid transparent;border-radius:6px;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-family:var(--font);cursor:pointer;text-decoration:none;transition:background .15s;display:inline-block}
+    .err-btn-home:hover{background:var(--accent-hover)}
+
+    /* You might like strip */
+    .err-products{background:var(--light-gray);padding:52px 24px}
+    .err-products__inner{max-width:1200px;margin:0 auto}
+    .err-products h2{font-family:var(--serif);font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:32px;color:var(--black)}
+    .err-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+
+    @media(max-width:960px){.err-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){
+      .err-actions{flex-direction:column;align-items:center}
+      .err-btn-back,.err-btn-home{width:100%;max-width:260px;text-align:center}
+    }
+
+    body.dark-mode .err-btn-back{border-color:var(--black);color:var(--black)}
+    body.dark-mode .err-btn-back:hover{background:var(--black);color:var(--white)}
+    body.dark-mode .err-products{background:var(--light-gray)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <div class="header-search"><input type="search" id="headerSearch" placeholder="Search styles, brands…" autocomplete="off" /><button id="searchSubmit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
+        <button class="hicon" aria-label="Account" onclick="location.href='account.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="hicon" aria-label="Wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span class="cart-badge" id="cartBadge">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar"><div class="trust-bar__inner">
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Gift Wrapping</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>Easy &amp; Free Returns</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Student Discount</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Secure Shopping</span>
+  </div></div>
+
+  <!-- ERROR CONTENT -->
+  <div class="err-section">
+    <div class="err-code">404</div>
+    <h1 class="err-title">Oops — page not found</h1>
+    <p class="err-body">The page you're looking for may have moved, been renamed, or no longer exists. Let's get you back on track.</p>
+    <div class="err-actions">
+      <button class="err-btn-back" onclick="history.length > 1 ? history.back() : location.href='clothing.html'">&#8592; Go Back</button>
+      <a href="clothing.html" class="err-btn-home">Return Home</a>
+    </div>
+  </div>
+
+  <!-- YOU MIGHT LIKE -->
+  <section class="err-products">
+    <div class="err-products__inner">
+      <h2>You might like</h2>
+      <div class="err-grid" id="err404Grid"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="footer-col footer-col--brand">
+        <div class="footer-logo">Clothing</div>
+        <p>123 Fashion Street<br>New York, NY 10001</p>
+        <p>hello@clothing.com<br>+1 (212) 555-0100</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop By</h4><ul><li><a href="shop.html?cat=women">Women</a></li><li><a href="shop.html?cat=men">Men</a></li><li><a href="shop.html?cat=new">New Arrivals</a></li><li><a href="shop.html?cat=sale">Sale</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="about.html">About Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+      <div class="footer-col"><h4>Customer Service</h4><ul><li><a href="faq.html">Help &amp; FAQs</a></li><li><a href="account.html">Track Your Order</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+      <div class="footer-col footer-col--newsletter">
+        <h4>Newsletter</h4>
+        <p>Subscribe for exclusive offers &amp; style updates.</p>
+        <form class="footer-form" id="footerForm"><input type="email" placeholder="Enter your email" required /><button type="submit">Submit</button></form>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>&copy; 2026 Clothing. All rights reserved.</p>
+      <div class="payment-icons"><span class="pay-icon">VISA</span><span class="pay-icon">MC</span><span class="pay-icon">AMEX</span><span class="pay-icon">PayPal</span><span class="pay-icon">Apple Pay</span></div>
+    </div>
+  </footer>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block">Checkout</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+  <script src="clothing.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    var grid = document.getElementById('err404Grid');
+    if(!grid || typeof ALL_PRODUCTS === 'undefined') return;
+    ALL_PRODUCTS.slice(0,4).forEach(function(p){
+      var card = document.createElement('div');
+      card.innerHTML = (typeof renderProductCard === 'function') ? renderProductCard(p) : '';
+      if(card.innerHTML) grid.appendChild(card.firstElementChild);
+    });
+  })();
+  </script>
+</body>
+</html>

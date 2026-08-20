@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-bg: #e7edf5;
+  --surface: #edf2f8;
+  --surface-strong: #f7f9fc;
+  --ink: #152943;
+  --muted: #61728a;
+  --line: #c7d2e2;
+  --orange: #ff6b00;
+  --orange-bright: #ff9c1b;
+  --shadow-dark: #b9c5d5;
+  --shadow-light: #ffffff;
+}
+
+html[data-theme="dark"] {
+  --app-bg: #181818;
+  --surface: #222222;
+  --surface-strong: #2b2b2b;
+  --ink: #f1f1f1;
+  --muted: #ababab;
+  --line: #464646;
+  --shadow-dark: #0d0d0d;
+  --shadow-light: #343434;
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 255, 255, 0.92), transparent 30rem),
+    linear-gradient(135deg, #eaf1f8 0%, var(--app-bg) 58%, #dce6f1 100%);
+}
+
+html[data-theme="dark"] body {
+  background: linear-gradient(135deg, #1c1c1c, #151515 60%, #1e1e1e);
+}
+
+.skeuo-panel {
+  background: linear-gradient(145deg, var(--surface-strong), var(--surface));
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 10px 10px 22px var(--shadow-dark), -8px -8px 18px var(--shadow-light), inset 1px 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.skeuo-inset {
+  background: linear-gradient(145deg, var(--surface), var(--surface-strong));
+  box-shadow: inset 4px 4px 9px var(--shadow-dark), inset -4px -4px 9px var(--shadow-light);
+}
+
+.skeuo-button {
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  background: linear-gradient(145deg, var(--surface-strong), var(--surface));
+  box-shadow: 4px 4px 8px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+}
+
+.skeuo-button:active {
+  box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+}
+
+.skeuo-orange {
+  color: white;
+  background: linear-gradient(145deg, var(--orange-bright), var(--orange));
+  border: 1px solid #ffae41;
+  box-shadow: 4px 4px 9px rgba(177, 87, 0, 0.36), -2px -2px 6px #fff1d5, inset 1px 1px 0 rgba(255, 255, 255, 0.36);
+}
+
+.nav-item.skeuo-orange .nav-icon {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.nav-item.skeuo-orange .nav-icon img {
+  filter: brightness(0) invert(1);
+}
+
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] .bg-slate-50,
+html[data-theme="dark"] .bg-slate-100 {
+  background-color: var(--surface-strong) !important;
+}
+
+html[data-theme="dark"] .text-slate-900,
+html[data-theme="dark"] .text-slate-800,
+html[data-theme="dark"] .text-slate-700,
+html[data-theme="dark"] .text-slate-600,
+html[data-theme="dark"] .text-slate-500,
+html[data-theme="dark"] .text-slate-400 {
+  color: var(--ink) !important;
+}
+
+html[data-theme="dark"] .border-slate-100,
+html[data-theme="dark"] .border-slate-200,
+html[data-theme="dark"] .border-slate-300 {
+  border-color: var(--line) !important;
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] button:not(.skeuo-orange) {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+  border-color: var(--line) !important;
+  background-color: #1a1a1a !important;
+}
+
+html[data-theme="dark"] table,
+html[data-theme="dark"] tbody,
+html[data-theme="dark"] tr {
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] .hover\:bg-slate-50:hover,
+html[data-theme="dark"] .hover\:bg-slate-100:hover {
+  background-color: #373737 !important;
+}
+
+::selection {
+  background: #ffc889;
+  color: #152943;
+}

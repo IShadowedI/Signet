@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — NEXUS Digital Agency</title>
+  <meta name="description" content="Meet the team behind NEXUS — 28 strategists, designers, and engineers building digital experiences since 2017." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="agency.css" />
+  <style>
+    /* About-specific extras */
+    .story-section { background: var(--bg-2); }
+    .story-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .story-img {
+      width: 100%; border-radius: 18px; object-fit: cover;
+      aspect-ratio: 3/2; filter: brightness(0.85) saturate(0.8);
+    }
+    .story-content h2 { margin-bottom: 20px; }
+    .story-content p { margin-bottom: 18px; line-height: 1.82; }
+
+    .about-stats-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding-block: 60px;
+    }
+    .about-stats-inner {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+
+    .culture-section { background: var(--bg-2); }
+    .culture-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .culture-img-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .culture-img-grid img {
+      width: 100%; border-radius: 12px; object-fit: cover;
+      filter: brightness(0.84) saturate(0.8);
+    }
+    .culture-img-grid img:first-child { aspect-ratio: 1/1.2; grid-row: span 2; }
+    .culture-img-grid img:not(:first-child) { aspect-ratio: 1/1; }
+
+    @media (max-width: 900px) {
+      .story-inner, .culture-grid { grid-template-columns: 1fr; gap: 44px; }
+      .about-stats-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .about-stats-inner { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-mark">N</span>NEXUS</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="portfolio.html">Work</a>
+        <a href="about.html" class="active">About</a>
+        <a href="blog.html">Journal</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a href="contact.html" class="btn btn-primary">Start a Project</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Journal</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <a href="contact.html" class="btn btn-primary btn-lg">Start a Project</a>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <span>About</span>
+      </div>
+      <div class="section-label">Who we are</div>
+      <h1 style="max-width:14ch; margin-bottom:20px;">We're not your typical agency.</h1>
+      <p class="lead" style="max-width:560px;">28 thinkers, makers, and troublemakers working from New York, London, and Lisbon. Strategy-first. Human-centred. Obsessively good.</p>
+    </div>
+  </section>
+
+  <!-- OUR STORY -->
+  <section class="story-section">
+    <div class="container">
+      <div class="story-inner">
+        <div class="reveal-left">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
+               alt="NEXUS team collaborating" class="story-img" style="background-color:#1a1a2e;" />
+        </div>
+        <div class="reveal-right">
+          <div class="section-label">Our story</div>
+          <h2>Built different, on purpose.</h2>
+          <p>NEXUS was founded in 2017 by Alex Chen and Sarah Kim — two people who were tired of agencies that prioritized billings over outcomes. We started with four people and a very clear north star: make things that actually work.</p>
+          <p>Eight years later we've grown to a team of 28 across three offices, but the philosophy is unchanged. We take on fewer clients than most agencies our size because we believe in depth over breadth. Every project gets our full attention, from discovery to delivery.</p>
+          <p>We've won 42 design awards, but the number we care most about is 98 — that's the percentage of our clients who come back for a second project.</p>
+          <div style="margin-top:32px;">
+            <a href="contact.html" class="btn btn-primary">Work With Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="about-stats-bar">
+    <div class="container">
+      <div class="about-stats-inner">
+        <div class="stat-item reveal">
+          <div class="stat-number" data-count="2017" data-suffix="">2017</div>
+          <div class="stat-label">Year Founded</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-number" data-count="28">28</div>
+          <div class="stat-label">Team Members</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-number" data-count="3">3</div>
+          <div class="stat-label">Global Offices</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-number" data-count="42">42</div>
+          <div class="stat-label">Awards Won</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUR VALUES -->
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header centered">
+        <div class="section-label">What drives us</div>
+        <h2>Our values</h2>
+        <p>These aren't framed posters on a wall. They're the principles that determine how we hire, how we work, and what we'll turn down.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card reveal">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <h4>Craft takes time.</h4>
+          <p>We never rush a project just to hit a billing target. Good work takes the time it takes — we build that into every proposal.</p>
+        </div>
+        <div class="value-card reveal reveal-delay-1">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h4>Clients are partners.</h4>
+          <p>We don't do the mysterious black-box agency thing. You'll see work early and often, and your voice shapes the output at every stage.</p>
+        </div>
+        <div class="value-card reveal reveal-delay-2">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <h4>Outcomes over outputs.</h4>
+          <p>A beautiful website that doesn't convert is a failure. We tie everything back to measurable business results, not just deliverables.</p>
+        </div>
+        <div class="value-card reveal">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h4>Say no to say yes.</h4>
+          <p>We deliberately limit our client roster. It means turning away revenue, but it also means every client gets our best thinking — not our second best.</p>
+        </div>
+        <div class="value-card reveal reveal-delay-1">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <h4>Global perspective.</h4>
+          <p>Our team spans three continents and nine nationalities. That diversity of lived experience makes our work more interesting — and more effective globally.</p>
+        </div>
+        <div class="value-card reveal reveal-delay-2">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h4>Always learning.</h4>
+          <p>Every team member gets an annual learning budget and protected time to explore new tools, techniques, and ideas outside of client work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">The team</div>
+        <div class="header-row">
+          <h2>The people<br>behind the work</h2>
+          <a href="contact.html" class="btn btn-ghost">Join us <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card reveal">
+          <div class="team-img-wrap">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&q=80"
+                 alt="Alex Chen" class="team-img" style="background-color:#1a1a2e;" />
+          </div>
+          <div class="team-info">
+            <div class="team-name">Alex Chen</div>
+            <div class="team-role">Co-founder &amp; Creative Director</div>
+            <div class="team-socials">
+              <a href="https://twitter.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card reveal reveal-delay-1">
+          <div class="team-img-wrap">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500&q=80"
+                 alt="Sarah Kim" class="team-img" style="background-color:#1a1a2e;" />
+          </div>
+          <div class="team-info">
+            <div class="team-name">Sarah Kim</div>
+            <div class="team-role">Co-founder &amp; Strategy Director</div>
+            <div class="team-socials">
+              <a href="https://twitter.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card reveal reveal-delay-2">
+          <div class="team-img-wrap">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&q=80"
+                 alt="Marcus Webb" class="team-img" style="background-color:#1a1a2e;" />
+          </div>
+          <div class="team-info">
+            <div class="team-name">Marcus Webb</div>
+            <div class="team-role">Head of Development</div>
+            <div class="team-socials">
+              <a href="https://github.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card reveal reveal-delay-3">
+          <div class="team-img-wrap">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&q=80"
+                 alt="Priya Sharma" class="team-img" style="background-color:#1a1a2e;" />
+          </div>
+          <div class="team-info">
+            <div class="team-name">Priya Sharma</div>
+            <div class="team-role">Lead UX Designer</div>
+            <div class="team-socials">
+              <a href="https://dribbble.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="Dribbble">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="team-social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CULTURE -->
+  <section class="culture-section">
+    <div class="container">
+      <div class="culture-grid">
+        <div class="reveal-left">
+          <div class="culture-img-grid">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="NEXUS office" style="background-color:#1a1a2e;" />
+            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=80" alt="Team workshop" style="background-color:#1a1a2e;" />
+            <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&q=80" alt="Brainstorm session" style="background-color:#1a1a2e;" />
+          </div>
+        </div>
+        <div class="reveal-right">
+          <div class="section-label">Life at NEXUS</div>
+          <h2>A place where great work feels like the natural default.</h2>
+          <p>We believe the environment you work in shapes the work you create. Our New York studio is designed to encourage serendipitous collaboration — open enough to spark conversation, quiet enough to think deeply.</p>
+          <p>Every Friday afternoon is maker time — no client work, no meetings. People build side projects, experiment with new tools, or write for the journal.</p>
+          <p>We offer full remote flexibility, 25 days paid leave, annual learning budget, health coverage, and a twice-yearly team offsite. But more than the perks — we think the work itself is the best benefit.</p>
+          <div style="margin-top:32px;">
+            <a href="contact.html" class="btn btn-outline">See Open Roles</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="section-label" style="justify-content:center;">Let's collaborate</div>
+      <h2 class="reveal">Got a project in mind?<br><span class="text-gradient">Let's talk.</span></h2>
+      <p class="reveal reveal-delay-1">We typically respond within 24 hours. Most projects begin with a free 30-minute intro call to see if we're the right fit.</p>
+      <div class="cta-btns reveal reveal-delay-2">
+        <a href="contact.html" class="btn btn-primary btn-lg">Start a Conversation</a>
+        <a href="portfolio.html" class="btn btn-outline btn-lg">View Our Work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo"><span class="logo-mark">N</span>NEXUS</a>
+          <p>Crafting digital experiences that move people. Strategy, design, and technology for brands that refuse to be ordinary.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Twitter/X">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://dribbble.com/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Dribbble">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services.html">Brand Identity</a></li>
+            <li><a href="services.html">Web Design &amp; Dev</a></li>
+            <li><a href="services.html">UI/UX Design</a></li>
+            <li><a href="services.html">Digital Marketing</a></li>
+            <li><a href="services.html">Motion &amp; Video</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="portfolio.html">Our Work</a></li>
+            <li><a href="blog.html">Journal</a></li>
+            <li><a href="contact.html">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:hello@nexusagency.co">hello@nexusagency.co</a></li>
+            <li><a href="tel:+12125551234">+1 (212) 555-1234</a></li>
+            <li><a href="contact.html">New York, NY</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 NEXUS Digital Agency. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="agency.js"></script>
+</body>
+</html>

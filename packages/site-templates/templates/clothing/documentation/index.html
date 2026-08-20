@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clothing — Template Documentation</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --accent:#e8474a;
+    --text:#222;
+    --text-2:#555;
+    --border:#e5e5e5;
+    --bg:#f7f7f7;
+    --white:#fff;
+    --code-bg:#f3f3f3;
+    --sidebar-w:260px;
+    --font:'Segoe UI',system-ui,sans-serif;
+  }
+  body{font-family:var(--font);color:var(--text);background:var(--bg);font-size:15px;line-height:1.7}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* Layout */
+  .doc-wrap{display:flex;min-height:100vh}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;padding:0 0 40px}
+  .content{flex:1;padding:48px 60px 80px;max-width:900px}
+
+  /* Sidebar */
+  .sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+  .sidebar-brand h1{font-size:1.15rem;font-weight:700;letter-spacing:0.04em}
+  .sidebar-brand p{font-size:0.72rem;color:var(--text-2);margin-top:4px}
+  .sidebar-nav{padding:16px 0}
+  .sidebar-nav a{display:block;padding:7px 24px;font-size:0.82rem;color:var(--text-2);font-weight:500;border-left:3px solid transparent;transition:all .15s}
+  .sidebar-nav a:hover,.sidebar-nav a.active{color:var(--accent);border-left-color:var(--accent);background:#fef7f7;text-decoration:none}
+  .sidebar-nav .nav-group{padding:14px 24px 6px;font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#aaa}
+
+  /* Content */
+  .content h2{font-size:1.65rem;font-weight:700;margin:0 0 6px;padding-top:60px}
+  .content h2:first-child{padding-top:0}
+  .content h3{font-size:1.1rem;font-weight:700;margin:32px 0 10px;color:var(--accent)}
+  .content h4{font-size:0.9rem;font-weight:700;margin:24px 0 8px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-2)}
+  .content p{margin:0 0 14px;color:var(--text-2)}
+  .content ul,.content ol{padding-left:22px;margin:0 0 14px}
+  .content li{margin-bottom:5px;color:var(--text-2)}
+  .divider{border:none;border-top:1px solid var(--border);margin:40px 0}
+  .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:var(--accent);color:#fff;vertical-align:middle;margin-left:8px}
+  .badge.green{background:#2d8c4e}
+
+  /* Code */
+  pre{background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:16px 20px;overflow-x:auto;margin:0 0 20px;font-size:0.82rem;line-height:1.6}
+  code{font-family:'Consolas','Courier New',monospace;font-size:0.85em;background:var(--code-bg);padding:1px 5px;border-radius:3px;border:1px solid var(--border)}
+  pre code{background:none;border:none;padding:0;font-size:inherit}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:0.85rem}
+  th{background:var(--code-bg);padding:9px 14px;text-align:left;font-weight:700;border:1px solid var(--border)}
+  td{padding:9px 14px;border:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  tr:nth-child(even) td{background:#fafafa}
+
+  /* Callout */
+  .callout{background:#fff8e1;border-left:4px solid #f0b429;border-radius:4px;padding:14px 18px;margin:0 0 20px;font-size:0.87rem;color:#5a4200}
+  .callout.info{background:#e8f4fd;border-color:#3b9fe0;color:#1a3f5c}
+  .callout.success{background:#e8f7ee;border-color:#2d8c4e;color:#1a4030}
+
+  /* File tree */
+  .file-tree{background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:16px 20px;font-family:'Consolas','Courier New',monospace;font-size:0.82rem;line-height:1.8;margin:0 0 20px}
+  .file-tree .folder{color:#3b9fe0;font-weight:700}
+  .file-tree .comment{color:#999}
+
+  /* Top bar */
+  .doc-topbar{background:var(--accent);color:#fff;padding:10px 60px;font-size:0.8rem;display:flex;align-items:center;gap:12px}
+  .doc-topbar strong{font-weight:700}
+
+  @media(max-width:768px){
+    .sidebar{display:none}
+    .content{padding:32px 24px 60px}
+    .doc-topbar{padding:10px 24px}
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <strong>Clothing Template</strong> &mdash; Documentation v1.0.0 &nbsp;|&nbsp;
+  <a href="../clothing.html" style="color:#fff;text-decoration:underline">View Live Demo &rarr;</a>
+</div>
+
+<div class="doc-wrap">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <h1>Clothing Docs</h1>
+      <p>HTML Template &mdash; v1.0.0</p>
+    </div>
+    <div class="sidebar-nav">
+      <span class="nav-group">Getting Started</span>
+      <a href="#intro">Introduction</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#structure">File Structure</a>
+      <a href="#setup">Quick Setup</a>
+
+      <span class="nav-group">Customisation</span>
+      <a href="#colors">Colours &amp; Theme</a>
+      <a href="#fonts">Fonts</a>
+      <a href="#images">Images</a>
+      <a href="#products">Products</a>
+      <a href="#darkmode">Dark Mode</a>
+
+      <span class="nav-group">Pages</span>
+      <a href="#pages">All Pages</a>
+      <a href="#nav">Navigation</a>
+
+      <span class="nav-group">Technical</span>
+      <a href="#html">HTML Structure</a>
+      <a href="#css">CSS Variables</a>
+      <a href="#js">JavaScript</a>
+      <a href="#responsive">Responsive</a>
+      <a href="#browsers">Browser Support</a>
+
+      <span class="nav-group">Legal</span>
+      <a href="#licence">Licence</a>
+      <a href="#credits">Credits</a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- Introduction -->
+    <h2 id="intro">Introduction</h2>
+    <p>Welcome to <strong>Clothing</strong> — a premium, fully responsive HTML5 e-commerce template designed for fashion and clothing brands. Built with pure HTML5, CSS3, and vanilla JavaScript (no frameworks, no build tools), it is easy to customise and deploy anywhere.</p>
+    <ul>
+      <li>Pure HTML5 / CSS3 / Vanilla JS — zero dependencies</li>
+      <li>Fully responsive — mobile-first, tested at 320px&ndash;2560px</li>
+      <li>Dark mode with localStorage persistence</li>
+      <li>Mini cart, wishlist, product filtering, hero slider</li>
+      <li>12 pages included out of the box</li>
+    </ul>
+    <hr class="divider">
+
+    <!-- Requirements -->
+    <h2 id="requirements">Requirements</h2>
+    <p>This is a static HTML template. No server, database, or build tool is required. You only need:</p>
+    <ul>
+      <li>A modern web browser to preview locally</li>
+      <li>A text editor to customise (VS Code, Sublime Text, etc.)</li>
+      <li>A web host or CDN to publish (any static host works — Netlify, Vercel, GitHub Pages, traditional cPanel hosting, etc.)</li>
+    </ul>
+    <div class="callout info">No Node.js, PHP, WordPress, or database setup is required.</div>
+    <hr class="divider">
+
+    <!-- File Structure -->
+    <h2 id="structure">File Structure</h2>
+    <div class="file-tree">
+<span class="folder">ClothingTemplate/</span>
+├── clothing.html          <span class="comment">&lt;!-- Homepage --&gt;</span>
+├── shop.html              <span class="comment">&lt;!-- Shop / category listing --&gt;</span>
+├── product.html           <span class="comment">&lt;!-- Single product detail --&gt;</span>
+├── cart.html              <span class="comment">&lt;!-- Shopping cart --&gt;</span>
+├── about.html             <span class="comment">&lt;!-- About Us --&gt;</span>
+├── contact.html           <span class="comment">&lt;!-- Contact page --&gt;</span>
+├── account.html           <span class="comment">&lt;!-- Login / Register --&gt;</span>
+├── lookbook.html          <span class="comment">&lt;!-- Lookbook / editorial --&gt;</span>
+├── 404.html               <span class="comment">&lt;!-- Error page --&gt;</span>
+├── clothing.css           <span class="comment">&lt;!-- All styles --&gt;</span>
+├── clothing.js            <span class="comment">&lt;!-- All scripts --&gt;</span>
+├── README.txt             <span class="comment">&lt;!-- Quick start guide --&gt;</span>
+├── CREDITS.txt            <span class="comment">&lt;!-- Third-party credits --&gt;</span>
+└── <span class="folder">documentation/</span>
+    └── index.html         <span class="comment">&lt;!-- This file --&gt;</span>
+    </div>
+    <hr class="divider">
+
+    <!-- Quick Setup -->
+    <h2 id="setup">Quick Setup</h2>
+    <h3>1. Preview locally</h3>
+    <p>Double-click <code>clothing.html</code> to open it in your browser, or serve the folder with any local server (e.g. VS Code Live Server extension).</p>
+
+    <h3>2. Customise your brand name</h3>
+    <p>Search for <code>Clothing</code> across all HTML files and replace with your brand name.</p>
+
+    <h3>3. Swap placeholder images</h3>
+    <p>All images use Unsplash CDN URLs. Replace each <code>src</code> attribute with your own hosted image. See the <a href="#images">Images</a> section for details.</p>
+
+    <h3>4. Add your products</h3>
+    <p>Products are defined in <code>clothing.js</code> in the <code>MH_PRODUCTS</code> and <code>FP_PRODUCTS</code> arrays. See the <a href="#products">Products</a> section.</p>
+
+    <h3>5. Update navigation links</h3>
+    <p>All navigation links in the header are plain <code>&lt;a&gt;</code> tags pointing to the included HTML pages. Update or add pages as needed.</p>
+    <hr class="divider">
+
+    <!-- Colours -->
+    <h2 id="colors">Colours &amp; Theme</h2>
+    <p>All colours are defined as CSS custom properties in the <code>:root</code> block at the very top of <code>clothing.css</code>. Edit these to match your brand.</p>
+    <pre><code>:root {
+  --black:     #111111;   /* primary dark  */
+  --white:     #ffffff;   /* primary light */
+  --off-white: #f7f7f7;   /* page background */
+  --text:      #222222;   /* body text */
+  --text-2:    #555555;   /* secondary text */
+  --border:    #e5e5e5;   /* dividers */
+  --accent:    #e8474a;   /* call-to-action, highlights */
+  --accent-hover: #c73b3e;/* CTA hover state */
+  --gold:      #e2a03f;   /* star ratings */
+  --green:     #2d8c4e;   /* "in stock", success */
+}</code></pre>
+    <div class="callout">Change <code>--accent</code> and <code>--accent-hover</code> to instantly re-theme all buttons, links, and highlights across the entire template.</div>
+    <hr class="divider">
+
+    <!-- Fonts -->
+    <h2 id="fonts">Fonts</h2>
+    <p>The template uses two Google Fonts, loaded via a <code>&lt;link&gt;</code> tag in the <code>&lt;head&gt;</code> of each HTML file:</p>
+    <table>
+      <thead><tr><th>Variable</th><th>Font</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>--font</code></td><td>Montserrat</td><td>Body text, navigation, buttons, UI</td></tr>
+        <tr><td><code>--serif</code></td><td>Playfair Display</td><td>Headings, logo, editorial titles</td></tr>
+      </tbody>
+    </table>
+    <p>To change fonts, replace the Google Fonts <code>&lt;link&gt;</code> tag in the HTML head with your preferred font URL, then update the <code>--font</code> and/or <code>--serif</code> variables in <code>clothing.css</code>.</p>
+    <hr class="divider">
+
+    <!-- Images -->
+    <h2 id="images">Images</h2>
+    <p>All placeholder images are served from the Unsplash CDN at:</p>
+    <pre><code>https://images.unsplash.com/photo-{PHOTO_ID}?w={WIDTH}&amp;q=80</code></pre>
+    <p>The <code>w</code> parameter controls the rendered width and <code>q</code> controls quality (1–100).</p>
+
+    <h3>Replacing images</h3>
+    <p>Find every <code>src="https://images.unsplash.com/..."</code> in the HTML files and replace with a URL to your own hosted image. For best results, match the recommended dimensions:</p>
+    <table>
+      <thead><tr><th>Section</th><th>Recommended Size</th></tr></thead>
+      <tbody>
+        <tr><td>Hero slider</td><td>600 × 460px per side panel</td></tr>
+        <tr><td>Category tiles</td><td>220 × 180px</td></tr>
+        <tr><td>Product cards</td><td>420 × 560px (portrait)</td></tr>
+        <tr><td>Instagram gallery</td><td>300 × 300px (square)</td></tr>
+        <tr><td>Trend banners</td><td>400 × 500px</td></tr>
+        <tr><td>Sale / New Arrivals banners</td><td>500 × 600px</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout success">Unsplash images are free for commercial use under the <a href="https://unsplash.com/license" target="_blank">Unsplash Licence</a>. No attribution is required, but replacing them with your own product photography will significantly improve conversion rates.</div>
+    <hr class="divider">
+
+    <!-- Products -->
+    <h2 id="products">Products</h2>
+    <p>Products are stored as plain JavaScript arrays in <code>clothing.js</code>. There are two arrays:</p>
+    <ul>
+      <li><code>MH_PRODUCTS</code> — "Must Have" / featured section (10 items)</li>
+      <li><code>FP_PRODUCTS</code> — "Featured Products" carousel (6 items)</li>
+    </ul>
+    <p>Each product object has the following shape:</p>
+    <pre><code>{
+  id:     1,                       // unique number
+  name:   'Essential Oversized Hoodie',
+  price:  49.99,
+  oldPrice: 69.99,                 // optional — shows strikethrough + sale badge
+  badge:  'NEW',                   // optional — 'NEW', 'SALE', 'HOT', etc.
+  cat:    'sweatshirts',           // category slug (used for tab filtering)
+  img:    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=420&q=80',
+  rating: 4.5,
+  reviews: 128,
+  sizes:  ['XS','S','M','L','XL']  // optional
+}</code></pre>
+    <p>Add, remove, or edit products in either array. The <code>renderProductCard()</code> function in <code>clothing.js</code> automatically generates the card HTML from each object.</p>
+
+    <h3>Must Have tabs</h3>
+    <p>The tabs on the "Must Have" section filter <code>MH_PRODUCTS</code> by the <code>cat</code> field. The tab labels and slugs are set in the <code>initMustHave()</code> function. Edit the <code>tabs</code> array there to add or remove tab filters.</p>
+    <hr class="divider">
+
+    <!-- Dark Mode -->
+    <h2 id="darkmode">Dark Mode</h2>
+    <p>Dark mode is toggled by the moon/sun icon in the header. It works by adding the class <code>dark-mode</code> to the <code>&lt;body&gt;</code> element, which overrides all CSS variables to their dark equivalents. The user's preference is persisted in <code>localStorage</code> under the key <code>cl_dark</code>.</p>
+    <p>To add dark-mode overrides for any new section you create, add a rule like:</p>
+    <pre><code>body.dark-mode .my-section {
+  background: var(--off-white);
+  color: var(--text);
+}</code></pre>
+    <hr class="divider">
+
+    <!-- Pages -->
+    <h2 id="pages">All Pages</h2>
+    <table>
+      <thead><tr><th>File</th><th>Page</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>clothing.html</code></td><td>Homepage</td><td>Hero slider, categories, must-haves, featured products, sale &amp; new arrivals banners, Instagram gallery</td></tr>
+        <tr><td><code>shop.html</code></td><td>Shop / Category</td><td>Product grid with sidebar filters (category, price, size), sort dropdown, pagination</td></tr>
+        <tr><td><code>product.html</code></td><td>Product Detail</td><td>Image gallery, size/colour selector, add to cart, description tabs, related products</td></tr>
+        <tr><td><code>cart.html</code></td><td>Cart</td><td>Cart table with quantity editor, remove items, order summary, proceed to checkout</td></tr>
+        <tr><td><code>about.html</code></td><td>About Us</td><td>Brand story, values, team section</td></tr>
+        <tr><td><code>contact.html</code></td><td>Contact</td><td>Contact form, store info, embedded map placeholder</td></tr>
+        <tr><td><code>account.html</code></td><td>Account</td><td>Login and register tabs</td></tr>
+        <tr><td><code>lookbook.html</code></td><td>Lookbook</td><td>Editorial grid with large imagery and shop-the-look links</td></tr>
+        <tr><td><code>404.html</code></td><td>404 Error</td><td>Branded error page with navigation back to homepage</td></tr>
+      </tbody>
+    </table>
+    <hr class="divider">
+
+    <!-- Navigation -->
+    <h2 id="nav">Navigation</h2>
+    <p>The desktop navigation is in the <code>.site-nav</code> element inside each page's header. The mobile navigation drawer is generated dynamically by <code>initMobileMenu()</code> in <code>clothing.js</code>.</p>
+    <p>To add a new nav item:</p>
+    <ol>
+      <li>Add an <code>&lt;a href="yourpage.html"&gt;Label&lt;/a&gt;</code> inside <code>.site-nav</code> in every HTML file.</li>
+      <li>Add <code>'Label'</code> to the array in the <code>initMobileMenu()</code> function in <code>clothing.js</code>, along with its corresponding <code>href</code>.</li>
+    </ol>
+    <hr class="divider">
+
+    <!-- HTML Structure -->
+    <h2 id="html">HTML Structure</h2>
+    <p>Each page follows the same structural pattern:</p>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;!-- meta, title, Google Fonts link, clothing.css link --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- #ann — Announcement bar --&gt;
+  &lt;!-- .site-header — Header with nav --&gt;
+  &lt;!-- .trust-bar — Trust signals --&gt;
+  &lt;!-- [page-specific sections] --&gt;
+  &lt;!-- .site-footer --&gt;
+  &lt;!-- .site-footer__bottom --&gt;
+  &lt;!-- #miniCart — Slide-in cart sidebar --&gt;
+  &lt;!-- #overlay — Background overlay --&gt;
+  &lt;!-- #toast — Notification toast --&gt;
+  &lt;script src="../clothing.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <hr class="divider">
+
+    <!-- CSS Variables -->
+    <h2 id="css">CSS Variables Reference</h2>
+    <table>
+      <thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>--black</code></td><td>#111111</td><td>Primary dark colour</td></tr>
+        <tr><td><code>--white</code></td><td>#ffffff</td><td>Primary light colour</td></tr>
+        <tr><td><code>--off-white</code></td><td>#f7f7f7</td><td>Background</td></tr>
+        <tr><td><code>--light-gray</code></td><td>#f0f0f0</td><td>Light surface</td></tr>
+        <tr><td><code>--mid-gray</code></td><td>#999999</td><td>Placeholder text</td></tr>
+        <tr><td><code>--border</code></td><td>#e5e5e5</td><td>Dividers &amp; borders</td></tr>
+        <tr><td><code>--text</code></td><td>#222222</td><td>Body text</td></tr>
+        <tr><td><code>--text-2</code></td><td>#555555</td><td>Secondary text</td></tr>
+        <tr><td><code>--accent</code></td><td>#e8474a</td><td>CTA / highlight colour</td></tr>
+        <tr><td><code>--accent-hover</code></td><td>#c73b3e</td><td>CTA hover state</td></tr>
+        <tr><td><code>--gold</code></td><td>#e2a03f</td><td>Star rating colour</td></tr>
+        <tr><td><code>--green</code></td><td>#2d8c4e</td><td>Success / in-stock</td></tr>
+        <tr><td><code>--header-h</code></td><td>60px</td><td>Mobile header height</td></tr>
+        <tr><td><code>--ann-h</code></td><td>34px</td><td>Announcement bar height</td></tr>
+        <tr><td><code>--font</code></td><td>Montserrat</td><td>Primary font stack</td></tr>
+        <tr><td><code>--serif</code></td><td>Playfair Display</td><td>Display / serif font</td></tr>
+      </tbody>
+    </table>
+    <hr class="divider">
+
+    <!-- JavaScript -->
+    <h2 id="js">JavaScript</h2>
+    <p>All JavaScript lives in <code>clothing.js</code>. It uses no external libraries and requires no transpilation. Key modules (all IIFEs):</p>
+    <table>
+      <thead><tr><th>Function</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>initAnn()</code></td><td>Rotates announcement bar messages; close button</td></tr>
+        <tr><td><code>initHeaderScroll()</code></td><td>Adds shadow to header on scroll</td></tr>
+        <tr><td><code>initSearch()</code></td><td>Expands header search bar on click</td></tr>
+        <tr><td><code>initHero()</code></td><td>Hero slider — auto-advance (5.5s), prev/next, dots</td></tr>
+        <tr><td><code>initCopy()</code></td><td>Discount code copy-to-clipboard button</td></tr>
+        <tr><td><code>initMustHave()</code></td><td>Must Have section tab filter + carousel</td></tr>
+        <tr><td><code>initFeatured()</code></td><td>Featured Products carousel</td></tr>
+        <tr><td><code>initReveal()</code></td><td>IntersectionObserver scroll-reveal animations</td></tr>
+        <tr><td><code>initMobileMenu()</code></td><td>Hamburger → slide-in drawer nav</td></tr>
+        <tr><td><code>initDarkMode()</code></td><td>Dark mode toggle + localStorage persistence</td></tr>
+        <tr><td><code>addToCart()</code></td><td>Add product to cart, update badge &amp; mini cart</td></tr>
+        <tr><td><code>toggleWish()</code></td><td>Add/remove product from wishlist</td></tr>
+        <tr><td><code>openMiniCart()</code></td><td>Slide-in cart sidebar open/close</td></tr>
+      </tbody>
+    </table>
+
+    <h3>localStorage keys</h3>
+    <table>
+      <thead><tr><th>Key</th><th>Value</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>cl_cart</code></td><td>JSON array</td><td>Cart items</td></tr>
+        <tr><td><code>cl_wish</code></td><td>JSON array</td><td>Wishlist item IDs</td></tr>
+        <tr><td><code>cl_dark</code></td><td>'1' or ''</td><td>Dark mode preference</td></tr>
+      </tbody>
+    </table>
+    <hr class="divider">
+
+    <!-- Responsive -->
+    <h2 id="responsive">Responsive Breakpoints</h2>
+    <table>
+      <thead><tr><th>Breakpoint</th><th>Changes</th></tr></thead>
+      <tbody>
+        <tr><td>≤ 1280px</td><td>Footer 3-col, hero side images shrink</td></tr>
+        <tr><td>≤ 1100px</td><td>Hero side images narrower, search input shorter</td></tr>
+        <tr><td>≤ 1024px</td><td>Fewer nav items visible</td></tr>
+        <tr><td>≤ 960px</td><td>Mobile nav drawer, hero single-column, stacked layouts</td></tr>
+        <tr><td>≤ 768px</td><td>2-col categories, 3-col gallery, 2-item trust bar</td></tr>
+        <tr><td>≤ 640px</td><td>Single-column layouts throughout, 2-col gallery</td></tr>
+        <tr><td>≤ 400px</td><td>Smallest breakpoint — extra compact adjustments</td></tr>
+      </tbody>
+    </table>
+    <hr class="divider">
+
+    <!-- Browser Support -->
+    <h2 id="browsers">Browser Support</h2>
+    <table>
+      <thead><tr><th>Browser</th><th>Support</th></tr></thead>
+      <tbody>
+        <tr><td>Google Chrome (latest)</td><td><span class="badge green">Supported</span></td></tr>
+        <tr><td>Mozilla Firefox (latest)</td><td><span class="badge green">Supported</span></td></tr>
+        <tr><td>Apple Safari (latest)</td><td><span class="badge green">Supported</span></td></tr>
+        <tr><td>Microsoft Edge (latest)</td><td><span class="badge green">Supported</span></td></tr>
+        <tr><td>Internet Explorer</td><td><span class="badge" style="background:#999">Not Supported</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">CSS Grid, CSS Custom Properties, and <code>IntersectionObserver</code> are used throughout. Internet Explorer does not support these features.</div>
+    <hr class="divider">
+
+    <!-- Licence -->
+    <h2 id="licence">Licence</h2>
+    <p>This template is sold under the <strong>Envato Regular Licence</strong> (or Extended Licence if purchased). Key points:</p>
+    <ul>
+      <li><strong>Regular Licence</strong> — Use for a single end product. The end product may not be sold to end users.</li>
+      <li><strong>Extended Licence</strong> — Use for a single end product that is sold to end users (e.g. a SaaS product, downloadable product).</li>
+    </ul>
+    <p>Full licence terms: <a href="https://themeforest.net/licenses/standard" target="_blank">https://themeforest.net/licenses/standard</a></p>
+    <div class="callout">If you plan to resell this template directly (as a template), you need an Extended Licence for each end use. Contact the author for bulk licensing options.</div>
+    <hr class="divider">
+
+    <!-- Credits -->
+    <h2 id="credits">Credits</h2>
+    <table>
+      <thead><tr><th>Asset</th><th>Source</th><th>Licence</th></tr></thead>
+      <tbody>
+        <tr><td>Placeholder images</td><td><a href="https://unsplash.com" target="_blank">Unsplash</a></td><td><a href="https://unsplash.com/license" target="_blank">Unsplash Licence</a></td></tr>
+        <tr><td>Montserrat font</td><td><a href="https://fonts.google.com/specimen/Montserrat" target="_blank">Google Fonts</a></td><td>SIL Open Font Licence 1.1</td></tr>
+        <tr><td>Playfair Display font</td><td><a href="https://fonts.google.com/specimen/Playfair+Display" target="_blank">Google Fonts</a></td><td>SIL Open Font Licence 1.1</td></tr>
+        <tr><td>SVG icons</td><td>Original — included in template</td><td>Envato Licence</td></tr>
+        <tr><td>JavaScript</td><td>Original — vanilla ES2015+</td><td>Envato Licence</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:32px;color:#aaa;font-size:0.8rem">Documentation generated for Clothing Template v1.0.0 &mdash; &copy; 2025</p>
+
+  </main>
+</div>
+</body>
+</html>

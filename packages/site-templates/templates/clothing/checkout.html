@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — Clothing</title>
+  <link rel="stylesheet" href="clothing.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    .checkout-wrap{max-width:1160px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start}
+
+    /* ── Forms ── */
+    .co-section{margin-bottom:32px}
+    .co-section__title{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+    .co-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .co-row.full{grid-template-columns:1fr}
+    .co-field label{display:block;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-2);margin-bottom:6px}
+    .co-field input,.co-field select,.co-field textarea{width:100%;border:1px solid var(--border);border-radius:6px;padding:11px 14px;font-family:var(--font);font-size:0.87rem;color:var(--text);background:var(--white);transition:border-color .15s;box-sizing:border-box}
+    .co-field input:focus,.co-field select:focus,.co-field textarea:focus{outline:none;border-color:var(--accent)}
+    .co-field textarea{resize:vertical;min-height:80px}
+
+    /* Shipping methods */
+    .shipping-options{display:flex;flex-direction:column;gap:10px}
+    .ship-opt{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:7px;padding:14px 16px;cursor:pointer;transition:border-color .15s}
+    .ship-opt:has(input:checked){border-color:var(--accent);background:#fef7f7}
+    .ship-opt input{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+    .ship-opt__info{flex:1}
+    .ship-opt__name{font-size:0.87rem;font-weight:600}
+    .ship-opt__sub{font-size:0.75rem;color:var(--text-2);margin-top:2px}
+    .ship-opt__price{font-size:0.87rem;font-weight:700}
+
+    /* Payment tabs */
+    .pay-tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .pay-tab{padding:9px 18px;border:1px solid var(--border);border-radius:6px;background:var(--white);font-size:0.8rem;font-weight:600;color:var(--text-2);cursor:pointer;transition:all .15s;font-family:var(--font);display:flex;align-items:center;gap:8px}
+    .pay-tab.active{border-color:var(--accent);background:#fef7f7;color:var(--accent)}
+    .pay-panel{display:none}
+    .pay-panel.active{display:block}
+
+    .card-row{display:grid;grid-template-columns:1fr 100px 80px;gap:14px}
+
+    /* Paypal / Apple pay placeholders */
+    .pay-placeholder{text-align:center;padding:28px;border:1px dashed var(--border);border-radius:8px;color:var(--text-2);font-size:0.85rem}
+    .pay-placeholder svg{width:48px;height:48px;margin:0 auto 10px;display:block;opacity:.4}
+
+    /* ── Order summary ── */
+    .co-summary{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px;position:sticky;top:calc(var(--ann-h) + 80px + 16px)}
+    .co-summary__title{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+    .co-items{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;max-height:320px;overflow-y:auto}
+    .co-item{display:flex;gap:12px;align-items:flex-start}
+    .co-item__img{width:64px;height:80px;object-fit:cover;border-radius:5px;background:var(--light-gray);flex-shrink:0}
+    .co-item__info{flex:1;min-width:0}
+    .co-item__name{font-size:0.82rem;font-weight:600;line-height:1.35;margin-bottom:3px}
+    .co-item__meta{font-size:0.74rem;color:var(--text-2)}
+    .co-item__price{font-size:0.87rem;font-weight:700;flex-shrink:0;margin-left:auto}
+
+    .co-empty-cart{text-align:center;padding:24px 0;color:var(--text-2);font-size:0.85rem}
+
+    .co-totals{border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:10px}
+    .co-total-row{display:flex;justify-content:space-between;font-size:0.84rem;color:var(--text-2)}
+    .co-total-row.grand{font-size:1rem;font-weight:700;color:var(--text);margin-top:6px}
+    .co-discount-row{color:var(--green)}
+
+    .co-promo{display:flex;gap:8px;margin:16px 0}
+    .co-promo input{flex:1;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--font);font-size:0.82rem;color:var(--text)}
+    .co-promo input:focus{outline:none;border-color:var(--accent)}
+    .co-promo button{padding:10px 16px;background:var(--black);color:#fff;border:none;border-radius:6px;font-family:var(--font);font-size:0.82rem;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
+    .co-promo button:hover{background:var(--accent)}
+
+    .place-order-btn{width:100%;padding:15px;margin-top:16px;background:var(--accent);color:#fff;border:none;border-radius:7px;font-family:var(--font);font-size:0.95rem;font-weight:700;cursor:pointer;letter-spacing:0.04em;transition:background .15s}
+    .place-order-btn:hover{background:var(--accent-hover)}
+
+    .co-secure{display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.72rem;color:var(--text-2);margin-top:12px}
+    .co-secure svg{width:13px;height:13px}
+
+    /* Breadcrumb */
+    .co-steps{display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--text-2);margin-bottom:32px;flex-wrap:wrap}
+    .co-steps__step{font-weight:600}
+    .co-steps__step.active{color:var(--accent)}
+    .co-steps__sep{color:var(--border)}
+
+    /* Order confirmed overlay */
+    .order-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1100;align-items:center;justify-content:center}
+    .order-success.show{display:flex}
+    .order-success__box{background:var(--white);border-radius:14px;padding:48px 40px;text-align:center;max-width:420px;width:90%;animation:fadeUp .35s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .order-success__icon{width:64px;height:64px;background:#e8f5ee;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .order-success__icon svg{width:32px;height:32px;color:var(--green)}
+    .order-success__title{font-family:var(--serif);font-size:1.6rem;font-weight:700;margin-bottom:10px}
+    .order-success__msg{color:var(--text-2);font-size:0.88rem;line-height:1.7;margin-bottom:28px}
+
+    @media(max-width:960px){.checkout-wrap{grid-template-columns:1fr}}
+    @media(max-width:640px){.co-row{grid-template-columns:1fr}.card-row{grid-template-columns:1fr 1fr}}
+    @media(max-width:400px){.card-row{grid-template-columns:1fr}}
+
+    body.dark-mode .co-summary{background:var(--white);border-color:var(--border)}
+    body.dark-mode .co-field input,
+    body.dark-mode .co-field select,
+    body.dark-mode .co-field textarea{background:var(--white);border-color:var(--border);color:var(--text)}
+    body.dark-mode .ship-opt{background:var(--white);border-color:var(--border)}
+    body.dark-mode .pay-tab{background:var(--white);border-color:var(--border);color:var(--text-2)}
+    body.dark-mode .co-promo input{background:var(--white);border-color:var(--border);color:var(--text)}
+    body.dark-mode .order-success__box{background:var(--white)}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="ann" id="ann">
+    <div class="ann__inner" id="annInner">
+      <span class="ann__msg active">✦ EXTRA 10% OFF ON YOUR FIRST ORDER — USE CODE: <strong>WELCOME10</strong></span>
+      <span class="ann__msg">✦ FREE SHIPPING ON ORDERS OVER $59 &nbsp;|&nbsp; FREE RETURNS WITHIN 30 DAYS</span>
+      <span class="ann__msg">✦ NEW ARRIVALS EVERY WEEK — SHOP THE LATEST DROPS NOW</span>
+    </div>
+    <button class="ann__close" id="annClose" aria-label="Close">&#215;</button>
+  </div>
+
+  <!-- HEADER (simplified for checkout) -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hicon hicon--menu" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="clothing.html" class="site-logo">Clothing</a>
+      <button class="hicon hicon--cart-m" id="cartToggleMobile" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadgeMobile">0</span>
+      </button>
+      <nav class="site-nav">
+        <a href="shop.html?cat=new">New In</a>
+        <a href="shop.html?cat=women">Women</a>
+        <a href="shop.html?cat=men">Men</a>
+        <a href="shop.html?cat=sale" class="sale-link">Sale</a>
+        <a href="lookbook.html">Collections</a>
+        <a href="shop.html">Brands</a>
+        <a href="shop.html">Buy Now</a>
+      </nav>
+      <div class="header-actions">
+        <button class="hicon hicon--dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <svg class="dm-icon dm-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg class="dm-icon dm-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hicon hicon--cart" id="cartToggle" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CHECKOUT LAYOUT -->
+  <div class="checkout-wrap">
+
+    <!-- ── LEFT: FORM ── -->
+    <div class="co-form">
+
+      <div class="co-steps">
+        <span class="co-steps__step active">Cart</span>
+        <span class="co-steps__sep">›</span>
+        <span class="co-steps__step active">Checkout</span>
+        <span class="co-steps__sep">›</span>
+        <span class="co-steps__step">Confirmation</span>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="co-section">
+        <h2 class="co-section__title">Contact Information</h2>
+        <div class="co-row full">
+          <div class="co-field">
+            <label for="coEmail">Email Address</label>
+            <input type="email" id="coEmail" placeholder="you@example.com" autocomplete="email" />
+          </div>
+        </div>
+        <div class="co-row full">
+          <div class="co-field">
+            <label for="coPhone">Phone (optional)</label>
+            <input type="tel" id="coPhone" placeholder="+1 (212) 555-0100" autocomplete="tel" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="co-section">
+        <h2 class="co-section__title">Shipping Address</h2>
+        <div class="co-row">
+          <div class="co-field">
+            <label for="coFirst">First Name</label>
+            <input type="text" id="coFirst" placeholder="Jane" autocomplete="given-name" />
+          </div>
+          <div class="co-field">
+            <label for="coLast">Last Name</label>
+            <input type="text" id="coLast" placeholder="Smith" autocomplete="family-name" />
+          </div>
+        </div>
+        <div class="co-row full">
+          <div class="co-field">
+            <label for="coAddr1">Address Line 1</label>
+            <input type="text" id="coAddr1" placeholder="123 Main Street" autocomplete="address-line1" />
+          </div>
+        </div>
+        <div class="co-row full">
+          <div class="co-field">
+            <label for="coAddr2">Address Line 2 (optional)</label>
+            <input type="text" id="coAddr2" placeholder="Apt, suite, unit…" autocomplete="address-line2" />
+          </div>
+        </div>
+        <div class="co-row">
+          <div class="co-field">
+            <label for="coCity">City</label>
+            <input type="text" id="coCity" placeholder="New York" autocomplete="address-level2" />
+          </div>
+          <div class="co-field">
+            <label for="coState">State / Province</label>
+            <input type="text" id="coState" placeholder="NY" autocomplete="address-level1" />
+          </div>
+        </div>
+        <div class="co-row">
+          <div class="co-field">
+            <label for="coZip">ZIP / Postcode</label>
+            <input type="text" id="coZip" placeholder="10001" autocomplete="postal-code" />
+          </div>
+          <div class="co-field">
+            <label for="coCountry">Country</label>
+            <select id="coCountry" autocomplete="country">
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Method -->
+      <div class="co-section">
+        <h2 class="co-section__title">Shipping Method</h2>
+        <div class="shipping-options">
+          <label class="ship-opt">
+            <input type="radio" name="shipMethod" value="standard" checked />
+            <div class="ship-opt__info">
+              <div class="ship-opt__name">Standard Shipping</div>
+              <div class="ship-opt__sub">3–5 business days</div>
+            </div>
+            <span class="ship-opt__price" id="stdPrice">Free</span>
+          </label>
+          <label class="ship-opt">
+            <input type="radio" name="shipMethod" value="express" />
+            <div class="ship-opt__info">
+              <div class="ship-opt__name">Express Shipping</div>
+              <div class="ship-opt__sub">1–2 business days</div>
+            </div>
+            <span class="ship-opt__price">$9.99</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="co-section">
+        <h2 class="co-section__title">Payment</h2>
+        <div class="pay-tabs">
+          <button class="pay-tab active" data-panel="card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Credit / Debit Card
+          </button>
+          <button class="pay-tab" data-panel="paypal">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.032.17a.804.804 0 01-.794.68H7.72a.483.483 0 01-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.75-2.203 8.796-6.502z"/><path d="M8.467 5.048c.316-.858 1.073-1.48 2.04-1.657C10.924 3.294 11.379 3.25 11.81 3.25h5.032c.62 0 1.19.04 1.68.14.135.025.266.056.393.09C17.755 2.15 16.116 1.5 14.05 1.5H9.02c-.66 0-1.22.48-1.32 1.13L5.67 15.4a.795.795 0 00.785.915H8.84l.705-4.47.92-5.84z"/></svg>
+            PayPal
+          </button>
+          <button class="pay-tab" data-panel="applepay">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Apple Pay
+          </button>
+        </div>
+
+        <!-- Card panel -->
+        <div class="pay-panel active" id="panelCard">
+          <div class="co-row full">
+            <div class="co-field">
+              <label for="ccName">Name on Card</label>
+              <input type="text" id="ccName" placeholder="Jane Smith" autocomplete="cc-name" />
+            </div>
+          </div>
+          <div class="co-row full">
+            <div class="co-field">
+              <label for="ccNum">Card Number</label>
+              <input type="text" id="ccNum" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number" inputmode="numeric" />
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="co-field">
+              <label for="ccExp">Expiry Date</label>
+              <input type="text" id="ccExp" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" />
+            </div>
+            <div class="co-field">
+              <label for="ccCvc">CVC</label>
+              <input type="text" id="ccCvc" placeholder="123" maxlength="4" autocomplete="cc-csc" inputmode="numeric" />
+            </div>
+          </div>
+        </div>
+
+        <!-- PayPal panel -->
+        <div class="pay-panel" id="panelPaypal">
+          <div class="pay-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.032.17a.804.804 0 01-.794.68H7.72a.483.483 0 01-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.75-2.203 8.796-6.502z"/></svg>
+            You'll be redirected to PayPal to complete your payment securely.
+          </div>
+        </div>
+
+        <!-- Apple Pay panel -->
+        <div class="pay-panel" id="panelApplepay">
+          <div class="pay-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Apple Pay is available on supported Safari browsers and Apple devices.
+          </div>
+        </div>
+      </div>
+
+      <!-- Order note -->
+      <div class="co-section">
+        <h2 class="co-section__title">Order Note (optional)</h2>
+        <div class="co-row full">
+          <div class="co-field">
+            <label for="coNote">Add a note to your order</label>
+            <textarea id="coNote" placeholder="Special delivery instructions, gift message…"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT: SUMMARY ── -->
+    <aside class="co-summary">
+      <h2 class="co-summary__title">Order Summary</h2>
+
+      <div class="co-items" id="coItems">
+        <div class="co-empty-cart" id="coEmptyCart">
+          Your cart is empty. <a href="shop.html" style="color:var(--accent)">Continue shopping</a>
+        </div>
+      </div>
+
+      <div class="co-promo">
+        <input type="text" id="promoInput" placeholder="Discount code" />
+        <button id="promoApply">Apply</button>
+      </div>
+
+      <div class="co-totals">
+        <div class="co-total-row"><span>Subtotal</span><span id="coSubtotal">$0.00</span></div>
+        <div class="co-total-row" id="coShipRow"><span>Shipping</span><span id="coShip">Free</span></div>
+        <div class="co-total-row co-discount-row" id="coDiscRow" style="display:none"><span>Discount</span><span id="coDisc">−$0.00</span></div>
+        <div class="co-total-row grand"><span>Total</span><span id="coTotal">$0.00</span></div>
+      </div>
+
+      <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
+      <p class="co-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Secure 256-bit SSL encryption
+      </p>
+    </aside>
+
+  </div>
+
+  <!-- ORDER SUCCESS MODAL -->
+  <div class="order-success" id="orderSuccess">
+    <div class="order-success__box">
+      <div class="order-success__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="order-success__title">Order Confirmed!</h2>
+      <p class="order-success__msg">
+        Thank you for your order. We've sent a confirmation to your email.<br>
+        Your order will be dispatched within 1–2 business days.
+      </p>
+      <a href="clothing.html" class="btn btn--dark" style="display:inline-block">Continue Shopping</a>
+    </div>
+  </div>
+
+  <div class="mini-cart" id="miniCart">
+    <div class="mini-cart__hd"><h3>Shopping Bag <span id="mcCount">(0)</span></h3><button id="closeMiniCart">&#215;</button></div>
+    <div class="mini-cart__body" id="mcBody"><div class="mc-empty"><p>Your bag is empty</p><button class="btn btn--dark" onclick="document.getElementById('miniCart').classList.remove('open')">Continue Shopping</button></div></div>
+    <div class="mini-cart__ft" id="mcFt" style="display:none"><div class="mc-row"><span>Subtotal</span><span id="mcSubtotal">$0.00</span></div><button class="btn btn--dark btn-block" onclick="location.href='cart.html'">View Cart</button></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="clothing.js"></script>
+  <script>
+    (function(){
+      'use strict';
+      const CART_KEY = 'cl_cart';
+
+      function getCart(){
+        try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+        catch(e){ return []; }
+      }
+
+      function fmt(n){ return '$' + n.toFixed(2); }
+
+      // Populate order summary
+      function renderSummary(){
+        const cart = getCart();
+        const itemsEl = document.getElementById('coItems');
+        const emptyEl = document.getElementById('coEmptyCart');
+        const subtotalEl = document.getElementById('coSubtotal');
+        const totalEl = document.getElementById('coTotal');
+        const shipEl = document.getElementById('coShip');
+        const stdPriceEl = document.getElementById('stdPrice');
+
+        if(!cart.length){
+          emptyEl.style.display = '';
+          subtotalEl.textContent = '$0.00';
+          totalEl.textContent = '$0.00';
+          return;
+        }
+        emptyEl.style.display = 'none';
+
+        // Remove existing items (keep empty div)
+        itemsEl.querySelectorAll('.co-item').forEach(el => el.remove());
+
+        let subtotal = 0;
+        cart.forEach(item => {
+          const price = parseFloat(item.price);
+          subtotal += price * item.qty;
+          const div = document.createElement('div');
+          div.className = 'co-item';
+          div.innerHTML = `
+            <img class="co-item__img" src="${item.img || ''}" alt="${item.name}" loading="lazy" />
+            <div class="co-item__info">
+              <div class="co-item__name">${item.name}</div>
+              <div class="co-item__meta">Size: ${item.size || 'M'} &nbsp;·&nbsp; Qty: ${item.qty}</div>
+            </div>
+            <span class="co-item__price">${fmt(price * item.qty)}</span>`;
+          itemsEl.appendChild(div);
+        });
+
+        const isExpress = document.querySelector('input[name="shipMethod"]:checked')?.value === 'express';
+        const shipping = subtotal >= 59 ? 0 : 4.99;
+        const expressShipping = 9.99;
+        const shipCost = isExpress ? expressShipping : shipping;
+
+        stdPriceEl.textContent = shipping === 0 ? 'Free' : fmt(shipping);
+        shipEl.textContent = shipCost === 0 ? 'Free' : fmt(shipCost);
+        subtotalEl.textContent = fmt(subtotal);
+        totalEl.textContent = fmt(subtotal + shipCost);
+      }
+
+      renderSummary();
+
+      // Re-render on shipping method change
+      document.querySelectorAll('input[name="shipMethod"]').forEach(r => {
+        r.addEventListener('change', renderSummary);
+      });
+
+      // Promo code
+      const promoInput = document.getElementById('promoInput');
+      const promoApply = document.getElementById('promoApply');
+      const discRow = document.getElementById('coDiscRow');
+      const discEl = document.getElementById('coDisc');
+      const totalEl = document.getElementById('coTotal');
+
+      promoApply.addEventListener('click', function(){
+        const code = promoInput.value.trim().toUpperCase();
+        if(code === 'WELCOME10' || code === 'SAVE30' || code === 'CLOTHING'){
+          const pct = code === 'SAVE30' ? 0.3 : 0.1;
+          const cart = getCart();
+          const subtotal = cart.reduce((s,i) => s + parseFloat(i.price) * i.qty, 0);
+          const disc = subtotal * pct;
+          discEl.textContent = '−' + fmt(disc);
+          discRow.style.display = '';
+          const isExpress = document.querySelector('input[name="shipMethod"]:checked')?.value === 'express';
+          const shipping = isExpress ? 9.99 : (subtotal >= 59 ? 0 : 4.99);
+          totalEl.textContent = fmt(subtotal - disc + shipping);
+          if(typeof showToast === 'function') showToast('Discount applied!');
+        } else {
+          if(typeof showToast === 'function') showToast('Invalid discount code.');
+        }
+      });
+
+      // Pay tabs
+      document.querySelectorAll('.pay-tab').forEach(tab => {
+        tab.addEventListener('click', function(){
+          document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const panel = this.dataset.panel;
+          document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+          document.getElementById('panel' + panel.charAt(0).toUpperCase() + panel.slice(1)).classList.add('active');
+        });
+      });
+
+      // Card number formatting
+      const ccNum = document.getElementById('ccNum');
+      if(ccNum){
+        ccNum.addEventListener('input', function(){
+          let v = this.value.replace(/\D/g, '').slice(0,16);
+          this.value = v.replace(/(.{4})/g, '$1 ').trim();
+        });
+      }
+
+      // Expiry formatting
+      const ccExp = document.getElementById('ccExp');
+      if(ccExp){
+        ccExp.addEventListener('input', function(){
+          let v = this.value.replace(/\D/g, '').slice(0,4);
+          if(v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2);
+          this.value = v;
+        });
+      }
+
+      // Place Order
+      document.getElementById('placeOrderBtn').addEventListener('click', function(){
+        const cart = getCart();
+        if(!cart.length){
+          if(typeof showToast === 'function') showToast('Your cart is empty.');
+          return;
+        }
+        // Show success modal and clear cart
+        localStorage.removeItem(CART_KEY);
+        if(typeof updateCartUI === 'function') updateCartUI();
+        document.getElementById('orderSuccess').classList.add('show');
+      });
+
+    })();
+  </script>
+</body>
+</html>
