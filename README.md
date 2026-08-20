@@ -2,11 +2,17 @@
 
 - Storefront: **http://161.35.109.204/store/ford**
 - Admin dashboard: **http://161.35.109.204:3001**
+- Owner sign in: **http://161.35.109.204:3001/login**
+- Company staff sign in: **http://161.35.109.204:3001/staff/login**
 - API health check: **http://161.35.109.204/health**
 
 The live server runs Ubuntu, Postgres, Nginx, and systemd-managed Signet services.
 Deployment administration uses the `signetadmin` SSH account; root and password SSH
 login are disabled. Rebuild/deploy helpers are in [`scripts/`](scripts/).
+
+Internal users have `owner`, `admin`, or `employee` roles. Owner accounts are global;
+admin and employee accounts are attached to a company tenant. All three currently use
+the same dashboard feature set while retaining their company identity for future scope controls.
 
 The GitHub Pages site remains a static navigation preview only; the URLs above run the
 functional application with the live API and database.
