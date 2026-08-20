@@ -22,7 +22,6 @@ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dea
 printf 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main\n' >/etc/apt/sources.list.d/nodesource.list
 apt-get update
 apt-get install -y nodejs
-npm install -g pm2
 
 if ! id -u "${APP_USER}" >/dev/null 2>&1; then
   adduser --disabled-password --gecos "" "${APP_USER}"
@@ -55,7 +54,7 @@ DATABASE_URL=postgresql://signet:${DB_PASSWORD}@localhost:5432/signet
 ERP_PROVIDER=mock
 ENV
 cat >"${APP_DIR}/apps/storefront/.env" <<ENV
-NEXT_PUBLIC_API_URL=http://${IP_ADDRESS}/api
+NEXT_PUBLIC_API_URL=http://${IP_ADDRESS}
 ENV
 cat >"${APP_DIR}/apps/admin/.env" <<ENV
 NEXT_PUBLIC_API_URL=http://${IP_ADDRESS}/api
@@ -63,7 +62,7 @@ ENV
 chown "${APP_USER}:${APP_USER}" "${APP_DIR}/apps/api/.env" "${APP_DIR}/apps/storefront/.env" "${APP_DIR}/apps/admin/.env"
 chmod 0600 "${APP_DIR}/apps/api/.env" "${APP_DIR}/apps/storefront/.env" "${APP_DIR}/apps/admin/.env"
 
-sudo -u "${APP_USER}" bash -lc "cd '${APP_DIR}' && npm ci && npm run db:setup && npm run db:seed && npm run build"
+sudo -u "${APP_USER}" bash -c "cd '${APP_DIR}' && npm install && npm run db:setup && npm run db:seed && npm run build"
 
 cat >/etc/nginx/sites-available/signet <<NGINX
 server {
@@ -79,6 +78,11 @@ server {
     proxy_set_header X-Forwarded-Proto \$scheme;
   }
 
+  location = /health {
+    proxy_pass http://127.0.0.1:4000/health;
+    proxy_set_header Host \$host;
+  }
+
   location / {
     proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;
@@ -92,10 +96,62 @@ NGINX
 rm -f /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/signet /etc/nginx/sites-enabled/signet
 nginx -t
+pm2 startup systemd -u "${APP_USER}" --hp "/home/${APP_USER}"
 systemctl enable --now nginx
 
-sudo -u "${APP_USER}" bash -lc "cd '${APP_DIR}' && pm2 delete signet-api signet-storefront signet-admin || true && pm2 start 'npm run start --workspace @signet/api' --name signet-api && pm2 start 'npm run start --workspace @signet/storefront' --name signet-storefront && pm2 start 'npm run start --workspace @signet/admin' --name signet-admin && pm2 save"
-pm2 startup systemd -u "${APP_USER}" --hp "/home/${APP_USER}"
+cat >/etc/systemd/system/signet-api.service <<EOF
+[Unit]
+Description=Signet API
+After=network.target postgresql.service
+[Service]
+User=${APP_USER}
+Group=${APP_USER}
+WorkingDirectory=${APP_DIR}
+Environment=HOME=/home/${APP_USER}
+Environment=PORT=4000
+ExecStart=/usr/bin/npm run start --workspace @signet/api
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/signet-storefront.service <<EOF
+[Unit]
+Description=Signet Storefront
+After=network.target signet-api.service
+[Service]
+User=${APP_USER}
+Group=${APP_USER}
+WorkingDirectory=${APP_DIR}
+Environment=HOME=/home/${APP_USER}
+Environment=PORT=3000
+ExecStart=/usr/bin/npm run start --workspace @signet/storefront
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/signet-admin.service <<EOF
+[Unit]
+Description=Signet Admin Dashboard
+After=network.target signet-api.service
+[Service]
+User=${APP_USER}
+Group=${APP_USER}
+WorkingDirectory=${APP_DIR}
+Environment=HOME=/home/${APP_USER}
+Environment=PORT=3001
+ExecStart=/usr/bin/npm run start --workspace @signet/admin
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now signet-api signet-storefront signet-admin
 
 ufw allow OpenSSH
 ufw allow 80/tcp

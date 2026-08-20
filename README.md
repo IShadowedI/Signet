@@ -1,37 +1,15 @@
-# Signet
-
-Multi-tenant B2B commerce with branded storefronts, an internal control dashboard,
-ERP integration, and configurable client pages.
-
-## Live preview
-
-**[Open the Signet dashboard preview](https://ishadowedi.github.io/Signet/)**
-
-The GitHub Pages site is a navigable static preview of the current dashboard. It does
-not connect to the API or database; those require a server deployment.
-
 ## Live deployment
 
-[render.yaml](render.yaml) is a GitHub-connected Render Blueprint. Once deployed, it
-creates these services:
+- Storefront: **http://161.35.109.204/store/ford**
+- Admin dashboard: **http://161.35.109.204:3001**
+- API health check: **http://161.35.109.204/health**
 
-- Storefront: `https://signet-storefront.onrender.com`
-- Admin dashboard: `https://signet-admin.onrender.com`
-- API health check: `https://signet-api.onrender.com/health`
+The live server runs Ubuntu, Postgres, Nginx, and systemd-managed Signet services.
+Deployment administration uses the `signetadmin` SSH account; root and password SSH
+login are disabled. Rebuild/deploy helpers are in [`scripts/`](scripts/).
 
-Client URLs use `https://signet-storefront.onrender.com/store/<client-slug>`.
-The seeded Ford storefront is `/store/ford` after the database is seeded.
-
-## Deploy from GitHub
-
-1. Open [Render Blueprints](https://dashboard.render.com/blueprints).
-2. Select **New Blueprint Instance**, connect `IShadowedI/Signet`, and choose `main`.
-3. Create the three web services and `signet-db` from the Blueprint.
-4. If Render changes the default service names, update `STOREFRONT_URL`, `CORS_ORIGINS`,
-   and `NEXT_PUBLIC_API_URL` to the generated URLs in the Render environment.
-5. Seed demo data once from the API service shell:
-
-   ```sh
+The GitHub Pages site remains a static navigation preview only; the URLs above run the
+functional application with the live API and database.
    npm run db:seed --workspace @signet/api
    ```
 
