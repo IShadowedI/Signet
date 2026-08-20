@@ -14,7 +14,7 @@
     "dev:admin": "npm run dev --workspace @signet/admin",
     "db:setup": "npm run db:setup --workspace @signet/api",
     "db:seed": "npm run db:seed --workspace @signet/api",
-    "build": "npm run build --workspace @signet/api && npm run build --workspace @signet/storefront && npm run build --workspace @signet/admin"
+    "build": "npm run build --workspace @signet/erp && npm run build --workspace @signet/site-templates && npm run build --workspace @signet/api && npm run build --workspace @signet/storefront && npm run build --workspace @signet/admin"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

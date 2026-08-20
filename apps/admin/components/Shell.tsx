@@ -111,7 +111,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <nav className="flex min-h-0 flex-1 flex-col justify-between">
           <div className="space-y-0.5">
             {NAV_ITEMS.map((item) => {
-              const selected = item.active !== false && pathname === item.href;
+              const selected = pathname === item.href;
               return (
                 <div key={item.label}>
                   {item.separatorBefore ? <div className="mx-2 my-2 border-t border-[color:var(--line)]" /> : null}

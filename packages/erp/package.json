@@ -4,9 +4,10 @@
   "private": true,
   "description": "Pluggable ERP integration layer (Acumatica first, Sage/others later)",
   "type": "commonjs",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
