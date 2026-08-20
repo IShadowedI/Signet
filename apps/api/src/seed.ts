@@ -95,6 +95,20 @@ async function main() {
     .onConflictDoUpdate({ target: tenants.slug, set: { name: "Acme Industrial" } })
     .returning();
 
+  const [signature] = await db
+    .insert(tenants)
+    .values({
+      slug: "signature-imagewear",
+      name: "Signature Imagewear",
+      erpCustomerCode: "SIGNATURE",
+      primaryColor: "#152943",
+      accentColor: "#ff6b00",
+      heroHeadline: "Signature Imagewear",
+      heroSubtext: "Branded apparel and uniform programs",
+    })
+    .onConflictDoUpdate({ target: tenants.slug, set: { name: "Signature Imagewear" } })
+    .returning();
+
   // Ford carries the full catalog; the polo is contract-priced lower.
   for (const [i, product] of allProducts.entries()) {
     await db
@@ -143,16 +157,50 @@ async function main() {
     .onConflictDoUpdate({ target: [users.tenantId, users.email], set: { passwordHash: buyerPassword } })
     .returning();
 
-  // Signet staff login for the admin/back-office app.
+  // Internal staff accounts: Signet owner, client admin, and client employee.
   await db
     .insert(internalUsers)
     .values({
-      email: "admin@signet.local",
-      name: "Signet Admin",
-      role: "superadmin",
-      passwordHash: await hashPassword("admin123"),
+      email: "owner@signet.local",
+      username: "owner",
+      name: "Signet Owner",
+      role: "owner",
+      passwordHash: await hashPassword("SignetOwner!2026"),
     })
-    .onConflictDoUpdate({ target: internalUsers.email, set: { name: "Signet Admin" } });
+    .onConflictDoUpdate({
+      target: internalUsers.email,
+      set: { username: "owner", name: "Signet Owner", role: "owner", tenantId: null, passwordHash: await hashPassword("SignetOwner!2026") },
+    });
+
+  await db
+    .insert(internalUsers)
+    .values({
+      email: "admin@signature-imagewear.local",
+      username: "signature-admin",
+      name: "Signature Imagewear Admin",
+      role: "admin",
+      tenantId: signature.id,
+      passwordHash: await hashPassword("SignatureAdmin!2026"),
+    })
+    .onConflictDoUpdate({
+      target: internalUsers.email,
+      set: { username: "signature-admin", name: "Signature Imagewear Admin", role: "admin", tenantId: signature.id, passwordHash: await hashPassword("SignatureAdmin!2026") },
+    });
+
+  await db
+    .insert(internalUsers)
+    .values({
+      email: "employee@signature-imagewear.local",
+      username: "signature-employee",
+      name: "Signature Imagewear Employee",
+      role: "employee",
+      tenantId: signature.id,
+      passwordHash: await hashPassword("SignatureEmployee!2026"),
+    })
+    .onConflictDoUpdate({
+      target: internalUsers.email,
+      set: { username: "signature-employee", name: "Signature Imagewear Employee", role: "employee", tenantId: signature.id, passwordHash: await hashPassword("SignatureEmployee!2026") },
+    });
 
   // Sample CRM data so the admin CRM tabs aren't empty on first load.
   await db.insert(contacts).values({
@@ -178,7 +226,8 @@ async function main() {
 
   console.log(
     `Seeded ${allProducts.length} products, tenants: ford, acme.\n` +
-      `Admin login: admin@signet.local / admin123 (http://localhost:3001)\n` +
+      `Owner login: owner / SignetOwner!2026 (http://localhost:3001)\n` +
+      `Company staff: signature-admin or signature-employee (http://localhost:3001/staff/login)\n` +
       `Buyer logins: buyer@ford.com / password123, buyer@acme.com / password123\n` +
       `Storefront: http://localhost:3000/?tenant=ford`,
   );

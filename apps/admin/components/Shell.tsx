@@ -7,9 +7,10 @@ import { api } from "@/lib/api";
 
 interface Me {
   id: string;
-  email: string;
+  username: string;
   name: string;
   role: string;
+  tenant: { name: string } | null;
 }
 
 const NAV_ITEMS = [
@@ -83,7 +84,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 font-bold text-white">{me.name.slice(0, 2).toUpperCase()}</span>
             <span className="hidden sm:block">
               <span className="block text-sm font-bold">{me.name}</span>
-              <span className="block text-xs text-[color:var(--muted)]">{me.role}</span>
+              <span className="block text-xs text-[color:var(--muted)]">{me.tenant?.name ?? "Signet"} · {me.role}</span>
             </span>
             <span className="text-sm">⌄</span>
           </button>

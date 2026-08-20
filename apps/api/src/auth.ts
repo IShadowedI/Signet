@@ -17,6 +17,7 @@ interface InternalTokenPayload {
   scope: "internal";
   userId: string;
   role: string;
+  tenantId?: string | null;
 }
 
 interface BuyerTokenPayload {

@@ -17,9 +17,12 @@ const id = () => text("id").primaryKey().$defaultFn(() => randomUUID());
 export const internalUsers = pgTable("internal_users", {
   id: id(),
   email: text("email").notNull().unique(),
+  username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   name: text("name").notNull(),
-  role: text("role").notNull().default("ops"), // superadmin | merchandiser | ops
+  role: text("role").notNull().default("employee"), // owner | admin | employee
+  /** Null belongs to Signet itself; populated users are company-scoped. */
+  tenantId: text("tenant_id").references(() => tenants.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -532,6 +535,11 @@ export const tenantsRelations = relations(tenants, ({ many }) => ({
   catalog: many(tenantProducts),
   users: many(users),
   orders: many(orders),
+  internalUsers: many(internalUsers),
+}));
+
+export const internalUsersRelations = relations(internalUsers, ({ one }) => ({
+  tenant: one(tenants, { fields: [internalUsers.tenantId], references: [tenants.id] }),
 }));
 
 export const productsRelations = relations(products, ({ many }) => ({
