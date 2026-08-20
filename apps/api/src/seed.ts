@@ -161,15 +161,15 @@ async function main() {
   await db
     .insert(internalUsers)
     .values({
-      email: "owner@signet.local",
-      username: "owner",
+      email: "signet-owner@signet.local",
+      username: "signet-owner",
       name: "Signet Owner",
       role: "owner",
-      passwordHash: await hashPassword("SignetOwner!2026"),
+      passwordHash: await hashPassword("7lI0923X?oe39Pnd"),
     })
     .onConflictDoUpdate({
       target: internalUsers.email,
-      set: { username: "owner", name: "Signet Owner", role: "owner", tenantId: null, passwordHash: await hashPassword("SignetOwner!2026") },
+      set: { username: "signet-owner", name: "Signet Owner", role: "owner", tenantId: null, passwordHash: await hashPassword("7lI0923X?oe39Pnd") },
     });
 
   await db
@@ -180,11 +180,11 @@ async function main() {
       name: "Signature Imagewear Admin",
       role: "admin",
       tenantId: signature.id,
-      passwordHash: await hashPassword("SignatureAdmin!2026"),
+      passwordHash: await hashPassword("admin123"),
     })
     .onConflictDoUpdate({
       target: internalUsers.email,
-      set: { username: "signature-admin", name: "Signature Imagewear Admin", role: "admin", tenantId: signature.id, passwordHash: await hashPassword("SignatureAdmin!2026") },
+      set: { username: "signature-admin", name: "Signature Imagewear Admin", role: "admin", tenantId: signature.id, passwordHash: await hashPassword("admin123") },
     });
 
   await db
@@ -195,11 +195,11 @@ async function main() {
       name: "Signature Imagewear Employee",
       role: "employee",
       tenantId: signature.id,
-      passwordHash: await hashPassword("SignatureEmployee!2026"),
+      passwordHash: await hashPassword("employee123"),
     })
     .onConflictDoUpdate({
       target: internalUsers.email,
-      set: { username: "signature-employee", name: "Signature Imagewear Employee", role: "employee", tenantId: signature.id, passwordHash: await hashPassword("SignatureEmployee!2026") },
+      set: { username: "signature-employee", name: "Signature Imagewear Employee", role: "employee", tenantId: signature.id, passwordHash: await hashPassword("employee123") },
     });
 
   // Sample CRM data so the admin CRM tabs aren't empty on first load.
@@ -226,8 +226,8 @@ async function main() {
 
   console.log(
     `Seeded ${allProducts.length} products, tenants: ford, acme.\n` +
-      `Owner login: owner / SignetOwner!2026 (http://localhost:3001)\n` +
-      `Company staff: signature-admin or signature-employee (http://localhost:3001/staff/login)\n` +
+      `Owner login: signet-owner / 7lI0923X?oe39Pnd (http://localhost:3001/owner/login)\n` +
+      `Company staff: signature-admin / admin123 or signature-employee / employee123 (http://localhost:3001/login)\n` +
       `Buyer logins: buyer@ford.com / password123, buyer@acme.com / password123\n` +
       `Storefront: http://localhost:3000/?tenant=ford`,
   );

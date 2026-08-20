@@ -7,7 +7,7 @@ import { api, ApiError } from "@/lib/api";
 
 export default function OwnerLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("owner");
+  const [username, setUsername] = useState("signet-owner");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
