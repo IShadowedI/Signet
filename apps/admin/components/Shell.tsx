@@ -20,7 +20,6 @@ const NAV_ITEMS = [
   { href: "/quotes", label: "Quotes", icon: "quotes.png" },
   { href: "/returns", label: "Returns & Requests", icon: "returns+requests.png" },
   { href: "/shipments", label: "Shipments", icon: "shipments.png" },
-  { href: "/finance", label: "Finance", icon: "invoice.png", active: false },
   { href: "/invoices", label: "Invoices", icon: "invoice.png", separatorBefore: true, separatorAfter: true },
   { href: "/site-builder", label: "Site Builder", icon: "site-builder.png" },
   { href: "/sites", label: "Ongoing Sites", icon: "ongoing-sites.png" },
