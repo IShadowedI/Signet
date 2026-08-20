@@ -26,7 +26,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api/punchout", punchoutRouter);
 app.use("/api/account", accountRouter);
 
-const port = Number(process.env.API_PORT ?? 4000);
+const port = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
 app.listen(port, () => {
   console.log(`Signet API listening on http://localhost:${port}`);
 });

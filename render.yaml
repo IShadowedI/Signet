@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: signet-api
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build --workspace @signet/api
+    preDeployCommand: npm run db:setup --workspace @signet/api
+    startCommand: npm run start --workspace @signet/api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        fromDatabase:
+          name: signet-db
+          property: connectionString
+      - key: AUTH_JWT_SECRET
+        generateValue: true
+      - key: ERP_PROVIDER
+        value: mock
+      - key: STOREFRONT_URL
+        value: https://signet-storefront.onrender.com
+      - key: CORS_ORIGINS
+        value: https://signet-storefront.onrender.com,https://signet-admin.onrender.com
+
+  - type: web
+    name: signet-storefront
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build --workspace @signet/storefront
+    startCommand: npm run start --workspace @signet/storefront
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        value: https://signet-api.onrender.com
+
+  - type: web
+    name: signet-admin
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build --workspace @signet/admin
+    startCommand: npm run start --workspace @signet/admin
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        value: https://signet-api.onrender.com
+
+databases:
+  - name: signet-db
+    plan: starter
+    databaseName: signet
+    user: signet
