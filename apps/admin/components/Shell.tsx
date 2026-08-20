@@ -10,7 +10,7 @@ interface Me {
   username: string;
   name: string;
   role: string;
-  tenant: { name: string } | null;
+  tenant: { slug: string; name: string } | null;
 }
 
 interface Activity {
