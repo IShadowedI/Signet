@@ -3,6 +3,13 @@
 Multi-tenant B2B commerce with branded storefronts, an internal control dashboard,
 ERP integration, and configurable client pages.
 
+## Live preview
+
+**[Open the Signet dashboard preview](https://ishadowedi.github.io/Signet/)**
+
+The GitHub Pages site is a navigable static preview of the current dashboard. It does
+not connect to the API or database; those require a server deployment.
+
 ## Live deployment
 
 [render.yaml](render.yaml) is a GitHub-connected Render Blueprint. Once deployed, it
