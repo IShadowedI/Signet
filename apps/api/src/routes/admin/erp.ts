@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { desc, eq } from "drizzle-orm";
 import { db } from "../../db";
-import { products, productVariants, punchoutSessions, tenants } from "../../schema";
+import { products, productVariants, punchoutSessions, tenantProducts, tenants } from "../../schema";
 import { requireInternalAuth } from "../../auth";
 import { erp } from "../../erp";
 
@@ -15,7 +15,10 @@ adminErpRouter.use(requireInternalAuth());
  * production this runs on a schedule / webhook rather than on demand, but the
  * mapping logic is the same.
  */
-adminErpRouter.post("/sync/products", async (_req, res) => {
+adminErpRouter.post("/sync/products", async (req, res) => {
+  const tenantSlug = String(req.body?.tenantSlug ?? "").trim();
+  const tenant = tenantSlug ? await db.query.tenants.findFirst({ where: eq(tenants.slug, tenantSlug) }) : null;
+  if (tenantSlug && !tenant) return res.status(404).json({ error: "Tenant not found" });
   const erpProducts = await erp.listProducts();
   let variantCount = 0;
 
@@ -53,9 +56,12 @@ adminErpRouter.post("/sync/products", async (_req, res) => {
         });
       variantCount++;
     }
+    if (tenant) {
+      await db.insert(tenantProducts).values({ tenantId: tenant.id, productId: product.id }).onConflictDoNothing();
+    }
   }
 
-  res.json({ provider: erp.name, products: erpProducts.length, variants: variantCount });
+  res.json({ provider: erp.name, tenantSlug: tenant?.slug ?? null, products: erpProducts.length, variants: variantCount });
 });
 
 /** Connectivity check for the active ERP provider. */

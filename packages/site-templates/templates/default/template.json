@@ -1,0 +1,14 @@
+{
+  "slug": "default",
+  "name": "Default",
+  "description": "A clean, branded commerce starter with a catalog, individual product pages, cart, checkout, and configurable content areas.",
+  "category": "Commerce",
+  "entry": "index.html",
+  "tags": ["commerce", "starter", "branding", "product"],
+  "pages": [
+    { "file": "index.html", "path": "/", "title": "Home", "isHome": true },
+    { "file": "product.html", "path": "/product", "title": "Product Detail" },
+    { "file": "cart.html", "path": "/cart", "title": "Cart" },
+    { "file": "checkout.html", "path": "/checkout", "title": "Checkout" }
+  ]
+}

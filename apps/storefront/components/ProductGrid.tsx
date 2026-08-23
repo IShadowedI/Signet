@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { StorefrontProduct } from "@/lib/api";
 import { useCart } from "@/lib/cart";
 import { track } from "@/lib/api";
@@ -64,7 +65,7 @@ function ProductCard({ slug, product, accent }: { slug: string; product: Storefr
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="font-semibold text-slate-800">{product.name}</h3>
+            <Link href={`/store/${slug}/product/${product.id}`} className="font-semibold text-slate-800 hover:underline">{product.name}</Link>
             {product.brand ? <p className="text-xs uppercase tracking-wide text-slate-400">{product.brand}</p> : null}
           </div>
           {product.allotmentEligible ? (

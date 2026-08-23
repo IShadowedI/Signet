@@ -75,6 +75,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   if (!checked) return <div className="p-8 text-slate-500">Loading…</div>;
   if (!me) return null;
+  const dashboardHref = `/dashboard/${me.role === "owner" ? "signet-owner" : me.tenant?.slug ?? "company"}`;
   const visibleNav = me.role === "owner"
     ? NAV_ITEMS.filter((item) => ["Dashboard", "Client Sites"].includes(item.label))
     : me.tenant?.slug === "signature-imagewear"
@@ -83,10 +84,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen text-[color:var(--ink)]">
-      <header className="fixed inset-x-0 top-0 z-20 flex h-24 items-center gap-6 px-8">
-        <Link href="/" className="flex w-60 items-center">
-          <img src="/assets/signet-logo.png" alt="Signet" className="h-auto w-48" />
-        </Link>
+      <header className="admin-header fixed inset-x-0 top-0 z-20 flex h-24 items-center gap-6 px-8">
+        <a href={dashboardHref} className="flex w-60 items-center">
+          <img src="/dashboard/assets/signet-logo.png" alt="Signet" className="h-auto w-56" />
+        </a>
         <div className="skeuo-inset flex max-w-4xl flex-1 items-center gap-3 rounded-2xl px-5 py-3 text-[color:var(--muted)]">
           <span className="text-2xl leading-none">⌕</span>
           <input
@@ -144,25 +145,26 @@ export function Shell({ children }: { children: React.ReactNode }) {
           ) : null}
         </div>
       </header>
-      <aside className="skeuo-panel fixed bottom-7 left-6 top-24 z-10 flex w-64 flex-col rounded-[28px] p-3">
+      <aside className="admin-sidebar skeuo-panel fixed bottom-7 left-6 top-24 z-10 flex w-64 flex-col rounded-[28px] p-3">
         <nav className="flex min-h-0 flex-1 flex-col justify-between">
           <div className="space-y-0.5">
             {visibleNav.map((item) => {
-              const selected = pathname === item.href;
+              const href = item.label === "Dashboard" ? dashboardHref : `/dashboard${item.href}`;
+              const selected = item.label === "Dashboard" ? pathname === `/${me.role === "owner" ? "signet-owner" : me.tenant?.slug ?? "company"}` : pathname === item.href;
               return (
                 <div key={item.label}>
                   {item.separatorBefore ? <div className="mx-2 my-2 border-t border-[color:var(--line)]" /> : null}
-                  <Link
-                    href={item.href}
+                  <a
+                    href={href}
                     className={`nav-item flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium transition-all ${
                       selected ? "skeuo-orange text-white" : "text-[color:var(--ink)] hover:bg-white/30"
                     }`}
                   >
                     <span aria-hidden className="nav-icon skeuo-button grid h-8 w-8 shrink-0 place-items-center rounded-xl">
-                      <img src={`/assets/icons/${item.icon}`} alt="" className="h-5 w-5 object-contain" />
+                      <img src={`/dashboard/assets/icons/${item.icon}`} alt="" className="h-5 w-5 object-contain" />
                     </span>
                     <span>{item.label}</span>
-                  </Link>
+                  </a>
                   {item.separatorAfter ? <div className="mx-2 my-2 border-t border-[color:var(--line)]" /> : null}
                 </div>
               );
@@ -180,7 +182,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </button>
         </nav>
       </aside>
-      <main className="min-h-screen pl-[19rem] pr-8 pt-28">{children}</main>
+      <main className="admin-main min-h-screen pl-[19rem] pr-8 pt-28">{children}</main>
     </div>
   );
 }

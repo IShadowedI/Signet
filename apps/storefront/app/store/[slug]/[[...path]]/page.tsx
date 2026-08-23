@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { fetchPublishedSitePage, fetchStorefront } from "@/lib/api";
 import { Header } from "@/components/Header";
 import { ProductGrid } from "@/components/ProductGrid";
+import { ProductDetail } from "@/components/ProductDetail";
 
 export const dynamic = "force-dynamic";
 
@@ -21,22 +22,21 @@ export default async function StorePage({
     ["--brand-accent" as string]: storefront.tenant.accentColor,
   } as React.CSSProperties;
 
+  const productId = params.path?.[0] === "product" ? params.path[1] : null;
+  if (productId) {
+    const product = storefront.products.find((item) => item.id === productId);
+    if (!product) notFound();
+    return <div style={themeVars}><Header slug={params.slug} tenantName={storefront.tenant.name} logoUrl={storefront.tenant.logoUrl} primaryColor={storefront.tenant.primaryColor} accentColor={storefront.tenant.accentColor} punchoutToken={searchParams.punchout} /><ProductDetail slug={params.slug} product={product} accent={storefront.tenant.accentColor} /></div>;
+  }
+
   if (savedPage) {
-    const body = extractBody(savedPage.page.html);
-    const html = rewriteInternalLinks(body, params.slug);
+    const document = buildCustomDocument(savedPage.page, params.slug);
     return (
-      <div style={themeVars}>
-        <Header
-          slug={params.slug}
-          tenantName={storefront.tenant.name}
-          logoUrl={storefront.tenant.logoUrl}
-          primaryColor={storefront.tenant.primaryColor}
-          accentColor={storefront.tenant.accentColor}
-          punchoutToken={searchParams.punchout}
-        />
-        <style dangerouslySetInnerHTML={{ __html: savedPage.page.css }} />
-        <main dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
+      <iframe
+        title={savedPage.page.title}
+        srcDoc={document}
+        className="block h-screen w-full border-0"
+      />
     );
   }
 
@@ -66,11 +66,19 @@ export default async function StorePage({
   );
 }
 
-function extractBody(html: string): string {
-  const match = /<body[^>]*>([\s\S]*?)<\/body>/i.exec(html);
-  return match?.[1] ?? html;
-}
-
 function rewriteInternalLinks(html: string, slug: string): string {
   return html.replace(/href=(["'])\/(?!store\/|\/)([^"']*)\1/gi, (_match, quote, target) => `href=${quote}/store/${slug}/${target}${quote}`);
+}
+
+function buildCustomDocument(page: { title: string; html: string; css: string; js: string }, slug: string): string {
+  const html = rewriteInternalLinks(page.html, slug);
+  const additions = `<base href="/store/${slug}/"><style>${page.css}</style>`;
+  const script = page.js ? `<script>${page.js.replace(/<\/script/gi, "<\\/script")}</script>` : "";
+
+  if (/<html[\s>]/i.test(html)) {
+    const withHead = /<\/head>/i.test(html) ? html.replace(/<\/head>/i, `${additions}</head>`) : html.replace(/<html([^>]*)>/i, `<html$1><head><meta charset="utf-8">${additions}</head>`);
+    return /<\/body>/i.test(withHead) ? withHead.replace(/<\/body>/i, `${script}</body>`) : `${withHead}${script}`;
+  }
+
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${page.title}</title>${additions}</head><body>${html}${script}</body></html>`;
 }

@@ -84,8 +84,7 @@ export async function syncBuiltinTemplates(): Promise<number> {
 }
 
 adminTemplatesRouter.get("/", async (_req, res) => {
-  const existingBuiltins = await db.query.siteTemplates.findMany({ where: eq(siteTemplates.sourceType, "builtin") });
-  if (existingBuiltins.length === 0) await syncBuiltinTemplates();
+  await syncBuiltinTemplates();
 
   const rows = await db.query.siteTemplates.findMany({
     orderBy: [asc(siteTemplates.category), asc(siteTemplates.name)],

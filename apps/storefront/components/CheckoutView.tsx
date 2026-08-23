@@ -98,8 +98,13 @@ export function CheckoutView({
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-8 py-10">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900">Checkout</h1>
+    <main className="min-h-screen bg-[#faf8f5] px-3 py-3 text-slate-800 md:px-8 md:py-6">
+      <div className="mx-auto max-w-6xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-orange-100/40">
+        <header className="flex items-center justify-between px-6 py-5"><Link href={shopHref} className="text-2xl font-bold tracking-wide text-orange-500">SIGNET</Link><span className="text-sm font-medium">{tenantName} Store</span></header>
+        <div className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 px-6 py-8"><div className="mx-auto max-w-2xl rounded-full bg-white/90 px-5 py-3 text-sm text-slate-500">Search products, SKUs, categories...</div></div>
+        <div className="mx-4 grid grid-cols-4 divide-x divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white text-center text-xs font-medium shadow-sm md:mx-6"><span className="bg-orange-50 px-2 py-4 text-orange-600">1. Cart</span><span className="px-2 py-4 text-slate-500">2. Billing / Shipping</span><span className="px-2 py-4 text-slate-500">3. Payment</span><span className="px-2 py-4 text-slate-500">4. Order Placed</span></div>
+      <div className="mx-auto max-w-5xl px-4 py-7 md:px-6">
+      <h1 className="mb-5 text-2xl font-bold text-slate-900">Your cart</h1>
 
       {punchoutToken ? (
         <div className="mb-6 rounded bg-amber-50 px-4 py-3 text-sm text-amber-800">
@@ -108,7 +113,7 @@ export function CheckoutView({
         </div>
       ) : null}
 
-      <div className="mb-6 divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
+      <div className="mb-6 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white shadow-sm">
         {lines.map((l) => (
           <div key={l.sku} className="flex items-center justify-between p-3 text-sm">
             <span>
@@ -123,7 +128,7 @@ export function CheckoutView({
         </div>
       </div>
 
-      <form onSubmit={submit} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-6">
+      <section className="border-t border-orange-200 pt-6"><h2 className="mb-4 text-xl font-bold text-slate-900">Ready to Checkout?</h2><form onSubmit={submit} className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         {!punchoutToken && (
           <>
             <label className="text-sm">
@@ -175,12 +180,13 @@ export function CheckoutView({
 
         <button
           disabled={busy}
-          className="rounded px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
-          style={{ backgroundColor: accent }}
+          className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 disabled:opacity-50"
         >
           {busy ? "Submitting…" : punchoutToken ? "Return cart to procurement" : "Place order"}
         </button>
-      </form>
+      </form></section>
+      <div className="mt-7 grid gap-3 border-t border-slate-100 pt-5 text-center text-sm text-slate-500 sm:grid-cols-4"><span>Secure Checkout</span><span>B2B Focused</span><span>ERP Integrated</span><span>Reliable Support</span></div>
+      </div></div>
     </main>
   );
 }

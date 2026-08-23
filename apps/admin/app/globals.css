@@ -121,6 +121,38 @@ html[data-theme="dark"] .hover\:bg-slate-100:hover {
   background-color: #373737 !important;
 }
 
+html[data-theme="dark"] .skeuo-panel,
+html[data-theme="dark"] .skeuo-button {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .nav-icon img,
+html[data-theme="dark"] .skeuo-button img {
+  filter: brightness(0) invert(1) contrast(0.82);
+}
+
+html[data-theme="dark"] .skeuo-orange img,
+html[data-theme="dark"] .nav-item.skeuo-orange .nav-icon img {
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 767px) {
+  .admin-header { height: 4.5rem; gap: 0.75rem; padding: 0.75rem 1rem; }
+  .admin-header > a { width: 9.5rem; }
+  .admin-header > a img { width: 100%; }
+  .admin-header > .skeuo-inset { display: none; }
+  .admin-header .skeuo-button { height: 2.75rem; min-width: 2.75rem; }
+  .admin-sidebar { position: fixed; inset: auto 0 0; width: 100%; height: 4.75rem; border-radius: 1.25rem 1.25rem 0 0; padding: 0.5rem; }
+  .admin-sidebar nav { overflow-x: auto; }
+  .admin-sidebar nav > div { display: flex; gap: 0.25rem; }
+  .admin-sidebar .nav-item { flex: 0 0 auto; padding: 0.5rem; }
+  .admin-sidebar .nav-item > span:last-child, .admin-sidebar nav > button { display: none; }
+  .admin-sidebar .nav-item > .nav-icon { height: 2.4rem; width: 2.4rem; }
+  .admin-sidebar .border-t { display: none; }
+  .admin-main { padding: 5.75rem 1rem 6rem; }
+  .admin-main h1 { font-size: 2rem; }
+}
+
 ::selection {
   background: #ffc889;
   color: #152943;

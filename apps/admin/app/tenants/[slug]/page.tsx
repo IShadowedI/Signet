@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Shell } from "@/components/Shell";
-import { api, ApiError } from "@/lib/api";
+import { api, apiUpload, ApiError } from "@/lib/api";
 
 interface Tenant {
   id: string;
@@ -105,7 +105,7 @@ export default function TenantDetailPage() {
     <Shell>
       <h1 className="mb-1 text-2xl font-bold text-slate-900">{tenant.name}</h1>
       <p className="mb-6 text-slate-500">
-        /{tenant.slug} {tenant.domain ? `· ${tenant.domain}` : ""}
+        Dashboard URL: /store/{tenant.slug} {tenant.domain ? `· ${tenant.domain}` : ""}
       </p>
 
       {notice ? <div className="mb-4 rounded bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{notice}</div> : null}
@@ -282,6 +282,7 @@ function CatalogTab({
 }) {
   const carriedIds = new Set(catalog.map((c) => c.productId));
   const [addProductId, setAddProductId] = useState("");
+  const [importing, setImporting] = useState(false);
 
   async function addToCatalog() {
     if (!addProductId) return;
@@ -298,6 +299,20 @@ function CatalogTab({
   async function removeRow(row: TenantProductRow) {
     await api(`/api/admin/catalog/${slug}/${row.id}`, { method: "DELETE" });
     onChange();
+  }
+
+  async function importCatalog(file: File | null) {
+    if (!file) return;
+    setImporting(true);
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("tenantSlug", slug);
+      await apiUpload("/api/admin/products/import", data);
+      onChange();
+    } finally {
+      setImporting(false);
+    }
   }
 
   return (
@@ -320,6 +335,10 @@ function CatalogTab({
         <button onClick={addToCatalog} className="rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white">
           Add
         </button>
+        <label className="cursor-pointer rounded border border-slate-300 px-3 py-2 text-sm">
+          {importing ? "Importing..." : "Import CSV for this site"}
+          <input type="file" accept=".csv,text/csv" className="hidden" disabled={importing} onChange={(e) => importCatalog(e.target.files?.[0] ?? null)} />
+        </label>
       </div>
 
       <table className="w-full overflow-hidden rounded-lg border border-slate-200 bg-white text-sm">
@@ -619,6 +638,7 @@ function OrdersTab({ orders, onChange }: { orders: Order[]; onChange: () => void
 
 function ErpTab({ slug, tenant, onChange }: { slug: string; tenant: Tenant; onChange: (t: Tenant) => void }) {
   const [health, setHealth] = useState<{ provider: string; reachable: boolean } | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     api<{ provider: string; reachable: boolean }>("/api/admin/erp/health").then(setHealth);
@@ -636,6 +656,22 @@ function ErpTab({ slug, tenant, onChange }: { slug: string; tenant: Tenant; onCh
             <span className="text-red-600">unreachable</span>
           )}
         </p>
+        <p className="mt-2 text-sm text-slate-600">Customer mapping: <span className="font-medium">{tenant.erpCustomerCode || "Not configured"}</span></p>
+        <button
+          className="mt-3 rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+          disabled={!health?.reachable || syncing}
+          onClick={async () => {
+            setSyncing(true);
+            try {
+              await api("/api/admin/erp/sync/products", { method: "POST", body: JSON.stringify({ tenantSlug: slug }) });
+              onChange(await api<Tenant>(`/api/admin/tenants/${slug}`));
+            } finally {
+              setSyncing(false);
+            }
+          }}
+        >
+          {syncing ? "Syncing catalog..." : "Sync Acumatica catalog to this site"}
+        </button>
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6">

@@ -292,11 +292,10 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
                       edit(tab === "html" ? { html: e.target.value } : tab === "css" ? { css: e.target.value } : { js: e.target.value })
                     }
                   />
-                  {/* Sandboxed: page markup is operator-authored HTML rendered from another origin. */}
                   <iframe
                     key={previewKey}
                     title="Page preview"
-                    sandbox=""
+                    sandbox="allow-scripts"
                     className="h-[62vh] w-full bg-white"
                     src={`${API_URL}/api/admin/sites/${params.slug}/pages/${selected.id}/preview`}
                   />

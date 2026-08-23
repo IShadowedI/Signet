@@ -50,7 +50,9 @@ function StatCard({
       className="skeuo-panel rounded-3xl p-4 transition hover:-translate-y-0.5"
     >
       <div className="flex items-center gap-3">
-        <span className="skeuo-button grid h-10 w-10 place-items-center rounded-2xl text-xl text-orange-500">{icon}</span>
+        <span className="skeuo-button grid h-10 w-10 place-items-center rounded-2xl">
+          <img src={`/dashboard/assets/icons/${icon}`} alt="" className="h-5 w-5 object-contain" />
+        </span>
         <div className="text-[11px] font-bold uppercase tracking-wide text-[color:var(--muted)]">{label}</div>
       </div>
       <div className={`mt-2 text-3xl font-bold ${tone === "warn" ? "text-orange-600" : "text-[color:var(--ink)]"}`}>{value}</div>
@@ -83,7 +85,9 @@ export function CompanyDashboard() {
   return (
     <Shell>
       <div className="mb-7 flex items-center gap-4">
-        <span className="skeuo-orange grid h-20 w-20 place-items-center rounded-3xl text-4xl">Γùê</span>
+        <span className="skeuo-orange grid h-20 w-20 place-items-center rounded-3xl">
+          <img src="/dashboard/assets/icons/home.png" alt="" className="h-10 w-10 object-contain" />
+        </span>
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-[color:var(--ink)]">Control Dashboard</h1>
           <p className="text-[color:var(--muted)]">A single view of every client site, order, and pending action across Signet.</p>
@@ -91,23 +95,23 @@ export function CompanyDashboard() {
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-        <StatCard label="Client Sites" value={tenants?.length ?? "ΓÇª"} href="/tenants" icon="ΓÖÜ" />
-        <StatCard label="Total Orders" value={orders?.length ?? "ΓÇª"} href="/orders" icon="≡ƒ¢Æ" />
+        <StatCard label="Client Sites" value={tenants?.length ?? "..."} href="/tenants" icon="ongoing-sites.png" />
+        <StatCard label="Total Orders" value={orders?.length ?? "..."} href="/orders" icon="orders.png" />
         <StatCard
           label="Pending Approval"
           value={pendingApproval}
           href="/orders"
-          icon="Γù╖"
+          icon="orders.png"
           tone={pendingApproval > 0 ? "warn" : "default"}
         />
-        <StatCard label="Open Invoices" value={unpaidInvoices} href="/invoices" icon="Γûú" tone={pastDue > 0 ? "warn" : "default"} />
-        <StatCard label="Quotes Awaiting Rep" value={openQuotes} href="/quotes" icon="Γù»" />
-        <StatCard label="Open Returns" value={openReturns} href="/returns" icon="Γå⌐" />
+        <StatCard label="Open Invoices" value={unpaidInvoices} href="/invoices" icon="invoice.png" tone={pastDue > 0 ? "warn" : "default"} />
+        <StatCard label="Quotes Awaiting Rep" value={openQuotes} href="/quotes" icon="quotes.png" />
+        <StatCard label="Open Returns" value={openReturns} href="/returns" icon="returns+requests.png" />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="skeuo-panel rounded-3xl p-5">
-          <div className="mb-3 flex items-center justify-between"><h2 className="font-bold text-[color:var(--ink)]">Γûú &nbsp;Client Sites</h2><Link href="/tenants" className="skeuo-orange rounded-xl px-4 py-1 text-xs font-bold">View all</Link></div>
+          <div className="mb-3 flex items-center justify-between"><h2 className="flex items-center gap-2 font-bold text-[color:var(--ink)]"><img src="/dashboard/assets/icons/ongoing-sites.png" alt="" className="h-5 w-5 object-contain" />Client Sites</h2><Link href="/tenants" className="skeuo-orange rounded-xl px-4 py-1 text-xs font-bold">View all</Link></div>
           <ul className="space-y-3 text-sm">
             {tenants?.slice(0, 6).map((t) => (
               <li key={t.slug} className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3">
@@ -122,22 +126,22 @@ export function CompanyDashboard() {
         </div>
 
         <div className="skeuo-panel rounded-3xl p-5">
-          <h2 className="mb-3 font-bold text-[color:var(--ink)]">╧ƒ &nbsp;Quick Actions</h2>
+          <h2 className="mb-3 flex items-center gap-2 font-bold text-[color:var(--ink)]"><img src="/dashboard/assets/icons/home.png" alt="" className="h-5 w-5 object-contain" />Quick Actions</h2>
           <div className="flex flex-col gap-2 text-sm">
             <Link href="/tenants" className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3 font-medium">
-              <span>ΓÖÜ &nbsp; Onboard a new client</span><span>ΓÇ║</span>
+              <span className="flex items-center gap-2"><img src="/dashboard/assets/icons/ongoing-sites.png" alt="" className="h-5 w-5 object-contain" />Onboard a new client</span><span>&gt;</span>
             </Link>
             <Link href="/orders" className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3 font-medium">
-              <span>Γûñ &nbsp; Review pending order approvals</span><span>ΓÇ║</span>
+              <span className="flex items-center gap-2"><img src="/dashboard/assets/icons/orders.png" alt="" className="h-5 w-5 object-contain" />Review pending order approvals</span><span>&gt;</span>
             </Link>
             <Link href="/invoices" className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3 font-medium">
-              <span>Γûú &nbsp; Raise or take payment on invoices</span><span>ΓÇ║</span>
+              <span className="flex items-center gap-2"><img src="/dashboard/assets/icons/invoice.png" alt="" className="h-5 w-5 object-contain" />Raise or take payment on invoices</span><span>&gt;</span>
             </Link>
             <Link href="/sites" className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3 font-medium">
-              <span>Γûú &nbsp; Edit a client&apos;s site pages</span><span>ΓÇ║</span>
+              <span className="flex items-center gap-2"><img src="/dashboard/assets/icons/site-builder.png" alt="" className="h-5 w-5 object-contain" />Edit a client&apos;s site pages</span><span>&gt;</span>
             </Link>
             <Link href="/templates" className="skeuo-button flex items-center justify-between rounded-2xl px-4 py-3 font-medium">
-              <span>Γç⌐ &nbsp; Browse or import a site template</span><span>ΓÇ║</span>
+              <span className="flex items-center gap-2"><img src="/dashboard/assets/icons/template-gallery.png" alt="" className="h-5 w-5 object-contain" />Browse or import a site template</span><span>&gt;</span>
             </Link>
           </div>
         </div>

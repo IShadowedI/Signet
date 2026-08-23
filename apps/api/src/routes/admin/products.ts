@@ -3,7 +3,7 @@ import multer from "multer";
 import { parse } from "csv-parse/sync";
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
-import { products, productVariants } from "../../schema";
+import { products, productVariants, tenantProducts, tenants } from "../../schema";
 import { requireInternalAuth } from "../../auth";
 
 export const adminProductsRouter = Router();
@@ -72,6 +72,10 @@ adminProductsRouter.patch("/:id", async (req, res) => {
  */
 adminProductsRouter.post("/import", upload.single("file"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "file is required (multipart form field 'file')" });
+
+  const tenantSlug = String(req.body?.tenantSlug ?? "").trim();
+  const tenant = tenantSlug ? await db.query.tenants.findFirst({ where: eq(tenants.slug, tenantSlug) }) : null;
+  if (tenantSlug && !tenant) return res.status(404).json({ error: "Tenant not found" });
 
   let rows: Record<string, string>[];
   try {
@@ -144,6 +148,12 @@ adminProductsRouter.post("/import", upload.single("file"), async (req, res) => {
         });
       }
       results.variantsUpserted++;
+      if (tenant) {
+        await db
+          .insert(tenantProducts)
+          .values({ tenantId: tenant.id, productId })
+          .onConflictDoNothing();
+      }
     } catch (e) {
       results.errors.push(`Row ${i + 2}: ${String(e)}`);
     }
