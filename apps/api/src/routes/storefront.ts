@@ -6,6 +6,7 @@ import { db } from "../db";
 import {
   allotmentTransactions,
   credentialRequests,
+  invoices,
   orderLines,
   orders,
   pageViews,
@@ -237,7 +238,33 @@ storefrontRouter.post("/:slug/orders", async (req, res) => {
       .where(eq(orders.id, order.id))
       .returning();
     syncCsv(updated);
-    res.status(201).json(updated);
+
+    // Every completed purchase is returned to the buyer as an invoice, which
+    // then feeds the AR / "pay invoices online" pipeline in the dashboard.
+    const invoiceNumber = `INV-${Date.now().toString(36).toUpperCase()}`;
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 30);
+    let invoice: typeof invoices.$inferSelect | null = null;
+    try {
+      [invoice] = await db
+        .insert(invoices)
+        .values({
+          tenantId: tenant.id,
+          orderId: order.id,
+          invoiceNumber,
+          invoiceType: "IN",
+          amount: orderTotal,
+          status: "open",
+          poNumber,
+          terms: "Net 30",
+          dueDate,
+        })
+        .returning();
+    } catch {
+      invoice = null;
+    }
+
+    res.status(201).json({ ...updated, invoiceNumber: invoice?.invoiceNumber ?? invoiceNumber, invoiceId: invoice?.id ?? null });
   } catch {
     const [updated] = await db.update(orders).set({ status: "error" }).where(eq(orders.id, order.id)).returning();
     syncCsv(updated);

@@ -11,6 +11,9 @@ interface Tenant {
   name: string;
   domain: string | null;
   erpCustomerCode: string | null;
+  licenseKey: string | null;
+  licenseStatus: string;
+  licenseExpiresAt: string | null;
   primaryColor: string;
   accentColor: string;
   logoUrl: string | null;
@@ -154,6 +157,9 @@ function BrandingTab({ tenant, onSaved }: { tenant: Tenant; onSaved: (t: Tenant)
     name: tenant.name,
     domain: tenant.domain ?? "",
     erpCustomerCode: tenant.erpCustomerCode ?? "",
+    licenseKey: tenant.licenseKey ?? "",
+    licenseStatus: tenant.licenseStatus ?? "active",
+    licenseExpiresAt: tenant.licenseExpiresAt ? tenant.licenseExpiresAt.slice(0, 10) : "",
     primaryColor: tenant.primaryColor,
     accentColor: tenant.accentColor,
     logoUrl: tenant.logoUrl ?? "",
@@ -191,6 +197,36 @@ function BrandingTab({ tenant, onSaved }: { tenant: Tenant; onSaved: (t: Tenant)
           <Field label="Accent color" type="color" value={form.accentColor} onChange={(v) => setForm({ ...form, accentColor: v })} />
           <Field label="Hero headline" value={form.heroHeadline} onChange={(v) => setForm({ ...form, heroHeadline: v })} />
           <Field label="Hero subtext" value={form.heroSubtext} onChange={(v) => setForm({ ...form, heroSubtext: v })} />
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-6">
+        <h2 className="mb-1 font-semibold text-slate-800">Custom domain &amp; license</h2>
+        <p className="mb-4 text-xs text-slate-500">
+          Point a client&apos;s own domain at this store and manage its store license. The domain also resolves the
+          storefront just like the slug.
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Custom domain" value={form.domain} onChange={(v) => setForm({ ...form, domain: v })} />
+          <Field label="License key" value={form.licenseKey} onChange={(v) => setForm({ ...form, licenseKey: v })} />
+          <label className="text-sm">
+            <span className="mb-1 block text-slate-600">License status</span>
+            <select
+              className="w-full rounded border border-slate-300 px-3 py-2"
+              value={form.licenseStatus}
+              onChange={(e) => setForm({ ...form, licenseStatus: e.target.value })}
+            >
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+              <option value="expired">Expired</option>
+            </select>
+          </label>
+          <Field
+            label="License expires"
+            type="date"
+            value={form.licenseExpiresAt}
+            onChange={(v) => setForm({ ...form, licenseExpiresAt: v })}
+          />
         </div>
       </section>
 

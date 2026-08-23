@@ -6,6 +6,8 @@ import { ProductDetail } from "@/components/ProductDetail";
 
 export const dynamic = "force-dynamic";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
 export default async function StorePage({
   params,
   searchParams,
@@ -26,6 +28,13 @@ export default async function StorePage({
   if (productId) {
     const product = storefront.products.find((item) => item.id === productId);
     if (!product) notFound();
+    // If the client published a custom product template page, render it and let
+    // the universal commerce runtime hydrate it for this product id.
+    const productPage = await fetchPublishedSitePage(params.slug, "/product");
+    if (productPage) {
+      const document = buildCustomDocument(productPage.page, params.slug);
+      return <iframe title={product.name} srcDoc={document} className="block h-screen w-full border-0" />;
+    }
     return <div style={themeVars}><Header slug={params.slug} tenantName={storefront.tenant.name} logoUrl={storefront.tenant.logoUrl} primaryColor={storefront.tenant.primaryColor} accentColor={storefront.tenant.accentColor} punchoutToken={searchParams.punchout} /><ProductDetail slug={params.slug} product={product} accent={storefront.tenant.accentColor} /></div>;
   }
 
@@ -73,7 +82,11 @@ function rewriteInternalLinks(html: string, slug: string): string {
 function buildCustomDocument(page: { title: string; html: string; css: string; js: string }, slug: string): string {
   const html = rewriteInternalLinks(page.html, slug);
   const additions = `<base href="/store/${slug}/"><style>${page.css}</style>`;
-  const script = page.js ? `<script>${page.js.replace(/<\/script/gi, "<\\/script")}</script>` : "";
+  const pageScript = page.js ? `<script>${page.js.replace(/<\/script/gi, "<\\/script")}</script>` : "";
+  // Universal commerce runtime injected into every client site + template.
+  const config = JSON.stringify({ slug, apiBase: API_URL }).replace(/</g, "\\u003c");
+  const runtime = `<script>window.__SIGNET__=${config}</script><script src="/signet-commerce.js" defer></script>`;
+  const script = `${pageScript}${runtime}`;
 
   if (/<html[\s>]/i.test(html)) {
     const withHead = /<\/head>/i.test(html) ? html.replace(/<\/head>/i, `${additions}</head>`) : html.replace(/<html([^>]*)>/i, `<html$1><head><meta charset="utf-8">${additions}</head>`);

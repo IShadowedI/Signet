@@ -27,6 +27,14 @@ interface Template {
   category: string;
 }
 
+interface MasterProduct {
+  id: string;
+  sku: string;
+  name: string;
+  brand: string | null;
+  imageUrl: string | null;
+}
+
 type Tab = "html" | "css" | "js" | "settings";
 
 export default function SiteEditorPage({ params }: { params: { slug: string } }) {
@@ -38,6 +46,35 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
   const [status, setStatus] = useState<string | null>(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [newPage, setNewPage] = useState({ path: "", title: "", templateId: "" });
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [allProducts, setAllProducts] = useState<MasterProduct[]>([]);
+  const [catalogProductIds, setCatalogProductIds] = useState<Set<string>>(new Set());
+  const [picked, setPicked] = useState<Record<string, boolean>>({});
+  const [productQuery, setProductQuery] = useState("");
+
+  const loadCatalog = useCallback(async () => {
+    const rows = await api<{ id: string; product: { id: string } }[]>(`/api/admin/catalog/${params.slug}`);
+    setCatalogProductIds(new Set(rows.map((r) => r.product.id)));
+  }, [params.slug]);
+
+  async function openPicker() {
+    setStatus(null);
+    const [prods] = await Promise.all([api<MasterProduct[]>("/api/admin/products"), loadCatalog()]);
+    setAllProducts(prods);
+    setPicked({});
+    setProductQuery("");
+    setPickerOpen(true);
+  }
+
+  async function addPickedProducts() {
+    const ids = Object.keys(picked).filter((k) => picked[k]);
+    for (const productId of ids) {
+      await api(`/api/admin/catalog/${params.slug}`, { method: "POST", body: JSON.stringify({ productId }) });
+    }
+    setPickerOpen(false);
+    await loadCatalog();
+    setStatus(ids.length ? `Added ${ids.length} product(s) to ${params.slug}'s store` : "No products selected");
+  }
 
   const load = useCallback(
     async (keepId?: string) => {
@@ -116,6 +153,12 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
         subtitle="Fully custom HTML, CSS and JS per page. Overwrite anything the template generated."
         actions={
           <>
+            <button
+              onClick={openPicker}
+              className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Add products
+            </button>
             <Link href="/sites" className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50">
               All sites
             </Link>
@@ -141,7 +184,12 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
                       selected?.id === p.id ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-slate-100"
                     }`}
                   >
-                    {p.isHome ? "ðŸ  " : ""}
+                    {p.isHome ? (
+                      <svg aria-label="Home" viewBox="0 0 24 24" className="mr-1 inline-block h-3.5 w-3.5 align-[-2px]" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path d="M3 11l9-7 9 7" />
+                        <path d="M5 10v10h14V10" />
+                      </svg>
+                    ) : null}
                     {p.title}
                     <span className="ml-1 text-xs opacity-60">{p.path}</span>
                     {!p.isPublished ? <span className="ml-1 text-xs opacity-60">(draft)</span> : null}
@@ -154,7 +202,10 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
                       load(copy.id);
                     }}
                   >
-                    â§‰
+                    <svg aria-hidden viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <rect x="9" y="9" width="11" height="11" rx="2" />
+                      <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+                    </svg>
                   </button>
                   <button
                     title="Delete"
@@ -165,12 +216,14 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
                       load();
                     }}
                   >
-                    âœ•
+                    <svg aria-hidden viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
                   </button>
                 </li>
               ))}
               {pages && pages.length === 0 ? (
-                <li className="text-slate-400">No pages yet â€” apply a template or add one below.</li>
+                <li className="text-slate-400">No pages yet - apply a template or add one below.</li>
               ) : null}
             </ul>
 
@@ -224,7 +277,7 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
                   </button>
                 ))}
                 <span className="ml-auto text-xs text-slate-400">
-                  {selected.template ? `from ${selected.template.name} Â· ` : ""}
+                  {selected.template ? `from ${selected.template.name} - ` : ""}
                   edited {shortDate(selected.updatedAt)}
                   {selected.updatedByEmail ? ` by ${selected.updatedByEmail}` : ""}
                 </span>
@@ -310,6 +363,80 @@ export default function SiteEditorPage({ params }: { params: { slug: string } })
           )}
         </div>
       </div>
+
+      {pickerOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setPickerOpen(false)}>
+          <div className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-800">Add products to {params.slug}</h3>
+                <p className="text-xs text-slate-500">Pull from the full dashboard catalog into this client store.</p>
+              </div>
+              <button onClick={() => setPickerOpen(false)} className="text-slate-400 hover:text-slate-700">
+                <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+            <div className="border-b border-slate-100 px-5 py-2">
+              <input
+                className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+                placeholder="Search products by name, SKU or brand"
+                value={productQuery}
+                onChange={(e) => setProductQuery(e.target.value)}
+              />
+            </div>
+            <ul className="flex-1 overflow-auto px-2 py-2 text-sm">
+              {allProducts
+                .filter((p) => {
+                  const q = productQuery.trim().toLowerCase();
+                  if (!q) return true;
+                  return `${p.name} ${p.sku} ${p.brand ?? ""}`.toLowerCase().includes(q);
+                })
+                .map((p) => {
+                  const already = catalogProductIds.has(p.id);
+                  return (
+                    <li key={p.id}>
+                      <label
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 ${already ? "opacity-50" : "hover:bg-slate-50"}`}
+                      >
+                        <input
+                          type="checkbox"
+                          disabled={already}
+                          checked={already || Boolean(picked[p.id])}
+                          onChange={(e) => setPicked((prev) => ({ ...prev, [p.id]: e.target.checked }))}
+                          className="h-4 w-4 accent-indigo-600"
+                        />
+                        {p.imageUrl ? (
+                          <img src={p.imageUrl} alt="" className="h-8 w-8 rounded object-cover" />
+                        ) : (
+                          <span className="grid h-8 w-8 place-items-center rounded bg-slate-100 text-[10px] text-slate-400">IMG</span>
+                        )}
+                        <span className="flex-1">
+                          <span className="block font-medium text-slate-800">{p.name}</span>
+                          <span className="block text-xs text-slate-400">
+                            {p.sku}
+                            {p.brand ? ` · ${p.brand}` : ""}
+                          </span>
+                        </span>
+                        {already ? <span className="text-xs text-emerald-600">In store</span> : null}
+                      </label>
+                    </li>
+                  );
+                })}
+              {allProducts.length === 0 ? <li className="px-3 py-6 text-center text-slate-400">No products in the master catalog yet.</li> : null}
+            </ul>
+            <div className="flex items-center justify-end gap-2 border-t border-slate-200 px-5 py-3">
+              <button onClick={() => setPickerOpen(false)} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50">
+                Cancel
+              </button>
+              <button onClick={addPickedProducts} className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700">
+                Add selected
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </Shell>
   );
 }

@@ -132,15 +132,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 <span>Dark mode</span>
                 <input type="checkbox" checked={darkMode} onChange={(e) => setTheme(e.target.checked)} className="h-4 w-4 accent-orange-500" />
               </label>
-              <button
-                className="mt-1 w-full rounded-xl px-2 py-2 text-left text-red-600 hover:bg-red-50/50"
-                onClick={async () => {
-                  await api("/api/auth/internal/logout", { method: "POST" });
-                  router.replace("/login");
-                }}
-              >
-                Sign out
-              </button>
             </div>
           ) : null}
         </div>

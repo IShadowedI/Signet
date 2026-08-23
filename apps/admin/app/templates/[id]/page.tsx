@@ -70,7 +70,7 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
     }
   }
 
-  if (!template) return <Shell><p className="text-slate-500">Loadingâ€¦</p></Shell>;
+  if (!template) return <Shell><p className="text-slate-500">Loading...</p></Shell>;
 
   return (
     <Shell>
@@ -97,7 +97,13 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
                       activePage === p.id ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-slate-100"
                     }`}
                   >
-                    {p.title} {p.isHome ? "ðŸ " : ""}
+                    {p.title}{" "}
+                    {p.isHome ? (
+                      <svg aria-label="Home" viewBox="0 0 24 24" className="inline-block h-3.5 w-3.5 align-[-2px]" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path d="M3 11l9-7 9 7" />
+                        <path d="M5 10v10h14V10" />
+                      </svg>
+                    ) : null}
                     <span className="ml-1 text-xs opacity-60">{p.path}</span>
                   </button>
                 </li>

@@ -35,6 +35,10 @@ export const tenants = pgTable("tenants", {
   parentTenantId: text("parent_tenant_id").references((): any => tenants.id, { onDelete: "cascade" }),
   domain: text("domain").unique(),
   erpCustomerCode: text("erp_customer_code"),
+  /** Custom-domain licensing for the client store. */
+  licenseKey: text("license_key"),
+  licenseStatus: text("license_status").notNull().default("active"), // active | suspended | expired
+  licenseExpiresAt: timestamp("license_expires_at"),
   primaryColor: text("primary_color").notNull().default("#0f172a"),
   accentColor: text("accent_color").notNull().default("#2563eb"),
   logoUrl: text("logo_url"),

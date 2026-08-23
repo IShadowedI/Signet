@@ -22,6 +22,9 @@ adminTenantsRouter.get("/", async (req, res) => {
       name: t.name,
       domain: t.domain,
       erpCustomerCode: t.erpCustomerCode,
+      licenseKey: t.licenseKey,
+      licenseStatus: t.licenseStatus,
+      licenseExpiresAt: t.licenseExpiresAt,
       primaryColor: t.primaryColor,
       accentColor: t.accentColor,
       punchoutEnabled: t.punchoutEnabled,
@@ -46,13 +49,13 @@ adminTenantsRouter.get("/:slug", async (req, res) => {
 
 /** Creates a new client storefront ("onboard a new client" action). */
 adminTenantsRouter.post("/", async (req, res) => {
-  const { slug, name, domain, erpCustomerCode } = req.body ?? {};
+  const { slug, name, domain, erpCustomerCode, licenseKey } = req.body ?? {};
   if (!slug || !name) return res.status(400).json({ error: "slug and name are required" });
   const scopedTenantId = internalTenantId(req);
 
   const [tenant] = await db
     .insert(tenants)
-    .values({ slug, name, domain: domain || null, erpCustomerCode: erpCustomerCode || null, parentTenantId: scopedTenantId })
+    .values({ slug, name, domain: domain || null, erpCustomerCode: erpCustomerCode || null, licenseKey: licenseKey || null, parentTenantId: scopedTenantId })
     .returning();
   res.status(201).json(tenant);
 });
@@ -66,6 +69,9 @@ adminTenantsRouter.patch("/:slug", async (req, res) => {
     name,
     domain,
     erpCustomerCode,
+    licenseKey,
+    licenseStatus,
+    licenseExpiresAt,
     primaryColor,
     accentColor,
     logoUrl,
@@ -82,6 +88,9 @@ adminTenantsRouter.patch("/:slug", async (req, res) => {
       ...(name !== undefined && { name }),
       ...(domain !== undefined && { domain: domain || null }),
       ...(erpCustomerCode !== undefined && { erpCustomerCode: erpCustomerCode || null }),
+      ...(licenseKey !== undefined && { licenseKey: licenseKey || null }),
+      ...(licenseStatus !== undefined && { licenseStatus }),
+      ...(licenseExpiresAt !== undefined && { licenseExpiresAt: licenseExpiresAt ? new Date(licenseExpiresAt) : null }),
       ...(primaryColor !== undefined && { primaryColor }),
       ...(accentColor !== undefined && { accentColor }),
       ...(logoUrl !== undefined && { logoUrl }),
